@@ -1,0 +1,4 @@
+# Définition des responsables par dossier/fonctionnalité
+/frontend/ @NomUtilisateurFrontend
+/backend/ @NomUtilisateurBackend
+/data-processing/ @NomUtilisateurData
