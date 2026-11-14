@@ -15,7 +15,7 @@ export default function App() {
       <main className="grid flex-1 grid-cols-1 gap-4 p-4 lg:grid-cols-3">
         <section className="min-h-[420px] lg:col-span-2">
           {/* M1 : carte interactive (+ M2 : couches SAR) */}
-          <div>carte desactivee</div>
+          <MapView />
         </section>
 
         <aside className="space-y-4">
