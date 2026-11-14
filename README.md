@@ -192,4 +192,4 @@ Puis ouvrir une Pull Request vers `main`. Un module (M1…M6) = une personne res
 ## 10. Licence et crédits
 
 Projet open source réalisé pour le NASA Space Apps Challenge 2026.
-Données : NASA-ISRO NISAR (via ASF DAAC / Earthdata). Fond de carte © contributeurs OpenStreetMap.
+Données : NASA-ISRO NISAR (via ASF DAAC / Earthdata). Fond de carte © contributeurs OpenStreetMap.test 
