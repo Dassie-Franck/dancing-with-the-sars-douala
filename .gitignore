@@ -1,0 +1,29 @@
+# Node
+node_modules/
+dist/
+.vite/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Secrets
+.env
+*.token
+
+# Donnees satellites brutes (lourdes)
+data-processing/raw/*
+!data-processing/raw/.gitkeep
+*.tif
+*.tiff
+*.h5
+*.zip
+
+# Divers
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+pythonProject1/

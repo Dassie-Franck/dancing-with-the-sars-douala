@@ -1,0 +1,15 @@
+INSTALLATION (depuis la racine du projet, dans PowerShell)
+
+1) Extraire l'archive à la racine du projet :
+   Expand-Archive -Path .\taches-4-5-6.zip -DestinationPath . -Force
+
+2) Dépendances Python supplémentaires :
+   .\.venv\Scripts\Activate.ps1
+   pip install h5netcdf h5py pyproj matplotlib
+   Add-Content requirements.txt "h5netcdf`nh5py`npyproj`nmatplotlib"
+
+3) Vérifier le contrat :
+   python data-processing\scripts\validate_contract.py
+
+4) Lancer le frontend avec les données factices :
+   cd frontend ; npm run dev

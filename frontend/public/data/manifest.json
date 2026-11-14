@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-14T11:29:47Z",
+  "project": "dancing-with-the-sars-douala",
+  "aoi": {
+    "name": "Douala – estuaire du Wouri",
+    "bbox": [
+      9.55,
+      3.9,
+      9.9,
+      4.2
+    ],
+    "crs": "EPSG:4326",
+    "image_size": [
+      1400,
+      1200
+    ]
+  },
+  "db_range": [
+    -30.0,
+    0.0
+  ],
+  "water_style": {
+    "color": "#22d3ee",
+    "opacity": 0.67
+  },
+  "threshold_default_db": -18.0,
+  "min_valid_fraction": 0.9,
+  "reference_id": "2026-01-15",
+  "acquisitions": [
+    {
+      "id": "2026-01-15",
+      "date": "2026-01-15",
+      "datetime_utc": "2026-01-15T05:30:00Z",
+      "season": "dry",
+      "orbit": "A",
+      "polarizations": [
+        "HH"
+      ],
+      "product": null,
+      "maturity": "MOCK",
+      "mock": true,
+      "partial": false,
+      "layers": {
+        "backscatter_hh": "layers/2026-01-15_backscatter_hh.png",
+        "water_mask": "layers/2026-01-15_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 128.85,
+        "new_water_km2": null,
+        "water_fraction": 0.0999,
+        "valid_fraction": 1.0,
+        "threshold_db": -18.0,
+        "mean_hh_db": -9.31
+      }
+    },
+    {
+      "id": "2026-04-21",
+      "date": "2026-04-21",
+      "datetime_utc": "2026-04-21T05:30:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "HH"
+      ],
+      "product": null,
+      "maturity": "MOCK",
+      "mock": true,
+      "partial": false,
+      "layers": {
+        "backscatter_hh": "layers/2026-04-21_backscatter_hh.png",
+        "water_mask": "layers/2026-04-21_water_mask.png",
+        "new_water_mask": "layers/2026-04-21_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 129.866,
+        "new_water_km2": 1.017,
+        "water_fraction": 0.1007,
+        "valid_fraction": 1.0,
+        "threshold_db": -18.0,
+        "mean_hh_db": -9.33
+      }
+    },
+    {
+      "id": "2026-07-26",
+      "date": "2026-07-26",
+      "datetime_utc": "2026-07-26T05:30:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "HH"
+      ],
+      "product": null,
+      "maturity": "MOCK",
+      "mock": true,
+      "partial": false,
+      "layers": {
+        "backscatter_hh": "layers/2026-07-26_backscatter_hh.png",
+        "water_mask": "layers/2026-07-26_water_mask.png",
+        "new_water_mask": "layers/2026-07-26_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 139.03,
+        "new_water_km2": 10.181,
+        "water_fraction": 0.1078,
+        "valid_fraction": 1.0,
+        "threshold_db": -18.0,
+        "mean_hh_db": -9.45
+      }
+    },
+    {
+      "id": "2026-10-02",
+      "date": "2026-10-02",
+      "datetime_utc": "2026-10-02T05:30:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "HH"
+      ],
+      "product": null,
+      "maturity": "MOCK",
+      "mock": true,
+      "partial": false,
+      "layers": {
+        "backscatter_hh": "layers/2026-10-02_backscatter_hh.png",
+        "water_mask": "layers/2026-10-02_water_mask.png",
+        "new_water_mask": "layers/2026-10-02_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 256.059,
+        "new_water_km2": 127.209,
+        "water_fraction": 0.1986,
+        "valid_fraction": 1.0,
+        "threshold_db": -18.0,
+        "mean_hh_db": -11.0
+      }
+    }
+  ]
+}

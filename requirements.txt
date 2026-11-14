@@ -1,0 +1,18 @@
+# --- Traitement des donnees raster / SAR ---
+rasterio
+geopandas
+numpy
+xarray
+pillow
+
+# --- Acces aux donnees NASA (ASF / CMR / Earthdata) ---
+asf_search
+earthaccess
+
+# --- API optionnelle ---
+fastapi
+uvicorn
+
+# --- Confort ---
+python-dotenv
+ipykernel
