@@ -1,9 +1,14 @@
+import { useState } from "react";
+import IntroGlobe from "./components/globe/IntroGlobe";
 import { Satellite, Waves } from "lucide-react";
 import MapView from "./components/MapView";
 
 export default function App() {
+    const [showIntro, setShowIntro] = useState(true);
   return (
-    <div className="flex h-full flex-col">
+    <>
+    {showIntro && <IntroGlobe onDone={() => setShowIntro(false)} />}
+      <div className="flex h-full flex-col">
       <header className="flex items-center gap-3 border-b border-space-700 bg-space-800 px-5 py-3">
         <Satellite className="text-radar" />
         <h1 className="text-lg font-semibold">Dancing with the SARs — Douala</h1>
@@ -28,5 +33,6 @@ export default function App() {
         </aside>
       </main>
     </div>
+    </>
   );
 }
