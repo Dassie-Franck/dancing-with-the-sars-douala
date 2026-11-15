@@ -14,6 +14,7 @@ export default function Globe3D({ flying, onArrived }) {
   const globeRef = useRef();
   const wrapRef = useRef();
   const [size, setSize] = useState({ w: 0, h: 0 });
+  const [ready, setReady] = useState(false);
  
   // Le globe prend toute la taille de son conteneur (s'adapte au mobile)
   useEffect(() => {
@@ -32,17 +33,19 @@ export default function Globe3D({ flying, onArrived }) {
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.6;
     controls.enableZoom = false;
+    setReady(true);
   };
  
-  // Quand on clique « Explorer » : arrêt de la rotation et zoom sur Douala
+  // Quand on clique « Explorer » : arrêt de la rotation et zoom sur Douala.
+  // Dépend aussi de `ready` : un clic avant la fin du chargement du globe ne bloque plus l'accueil.
   useEffect(() => {
-    if (!flying || !globeRef.current) return;
+    if (!flying || !ready || !globeRef.current) return;
     const g = globeRef.current;
     g.controls().autoRotate = false;
     g.pointOfView(ZOOM_VIEW, FLY_MS);
     const t = setTimeout(() => onArrived?.(), FLY_MS + 200);
     return () => clearTimeout(t);
-  }, [flying, onArrived]);
+  }, [flying, ready, onArrived]);
  
   const marker = useMemo(
     () => [{ ...DOUALA, label: "Douala · estuaire du Wouri" }],

@@ -2,5 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Jetons de la charte, lisibles aussi depuis Recharts et les canvas */
+:root {
+  --bg: #07090d;
+  --sf: #12151b;
+  --sf2: #1a1f27;
+  --line: #222a35;
+  --ink: #f1f5f9;
+  --ink2: #aab4c2;
+  --mut: #6b7686;
+  --acc: #19d3f3;
+  --water: #19d3f3;
+  --mang: #4ade80;
+  --urb: #a78bfa;
+  --veg: #fb923c;
+  --dry: #facc15;
+  --bad: #f43f5e;
+}
+
 html, body, #root { height: 100%; margin: 0; }
-body { @apply bg-space-900 text-slate-100 antialiased; }
+body {
+  @apply text-sar-ink antialiased;
+  background: radial-gradient(1200px 620px at 72% -10%, #0e202b 0, var(--bg) 62%) fixed;
+  background-color: var(--bg);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@layer components {
+  .sar-card {
+    @apply min-w-0 rounded-card border border-sar-line p-[18px];
+    background: linear-gradient(180deg, var(--sf), #0e1116);
+  }
+  .sar-lab {
+    @apply font-mono text-[10.5px] font-medium uppercase tracking-[0.09em] text-sar-mut;
+  }
+  .sar-cap { @apply text-[12.5px] text-sar-mut; }
+  .sar-btn {
+    @apply inline-flex h-[34px] items-center gap-2 whitespace-nowrap rounded-[10px] border border-sar-line bg-sar-sf px-[13px] text-[13px] font-medium text-sar-ink transition-colors hover:border-sar-acc hover:text-sar-acc focus:outline-none focus-visible:ring-2 focus-visible:ring-sar-acc/60;
+  }
+  .sar-btn-pri {
+    @apply border-sar-acc bg-sar-acc text-sar-oacc hover:text-sar-oacc hover:brightness-110;
+  }
+  .sar-seg { @apply flex overflow-hidden rounded-[10px] border border-sar-line bg-sar-sf; }
+  .sar-seg > button {
+    @apply h-[32px] flex-1 whitespace-nowrap px-3 text-[12px] font-medium text-sar-ink2 transition-colors hover:text-sar-ink;
+  }
+  .sar-seg > button + button { @apply border-l border-sar-line; }
+  .sar-seg > button[aria-pressed="true"] { @apply bg-sar-acc/[.13] text-sar-acc; }
+  .sar-select {
+    @apply h-[34px] rounded-[10px] border border-sar-line bg-sar-sf px-2 text-[13px] text-sar-ink focus:border-sar-acc focus:outline-none;
+  }
+  .sar-chip {
+    @apply inline-flex items-center whitespace-nowrap rounded px-[7px] py-[2px] font-mono text-[10.5px] font-medium uppercase tracking-[0.05em];
+  }
+}
+
+/* Carte des quartiers : repères et fiche dans la charte */
+.sar-pin { background: none; border: 0; padding: 0; cursor: pointer; transition: transform .15s ease; }
+.sar-pin:hover, .sar-pin:focus-visible { transform: translateY(-2px) scale(1.08); outline: none; }
+.sar-popup .maplibregl-popup-content {
+  background: #000; color: var(--ink); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 11px; font: 12px/1.45 Inter, system-ui, sans-serif; box-shadow: 0 10px 34px rgba(0,0,0,.55);
+  display: flex; flex-direction: column;
+}
+.sar-popup .maplibregl-popup-content b { font-weight: 600; font-size: 13px; }
+.sar-popup .maplibregl-popup-content span { color: var(--ink2); }
+.sar-popup .maplibregl-popup-content em { font-style: normal; font-family: "JetBrains Mono", monospace; font-size: 11px; margin-top: 2px; }
+.sar-popup .maplibregl-popup-tip { border-top-color: #000 !important; }
+.sar-qmap .maplibregl-ctrl-group { background: var(--sf) !important; border: 1px solid var(--line); }
+.sar-qmap .maplibregl-ctrl-group button + button { border-top-color: var(--line) !important; }
+.sar-qmap .maplibregl-ctrl-group button .maplibregl-ctrl-icon { filter: invert(.85); }
+.sar-qmap .maplibregl-ctrl-attrib { background: rgba(7,9,13,.75) !important; color: var(--mut); }
+.sar-qmap .maplibregl-ctrl-attrib a { color: var(--ink2); }
+
+/* Recharts : textes d'axes dans la police des mesures */
+.recharts-cartesian-axis-tick-value { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10.5px; }
+.recharts-wrapper:focus, .recharts-surface:focus { outline: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

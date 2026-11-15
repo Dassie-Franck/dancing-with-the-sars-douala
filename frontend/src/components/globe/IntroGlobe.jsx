@@ -2,7 +2,8 @@
 // B1 – Écran d'accueil « console de mission » : globe 3D -> acquisition de Douala -> tableau de bord.
 // Le module 3D (three.js) est chargé à part (lazy) pour ne pas ralentir le tableau de bord.
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { ArrowRight, Crosshair, Radio, Satellite } from "lucide-react";
+import { ArrowRight, Crosshair, Radio } from "lucide-react";
+import Logo from "../brand/Logo";
 
 const Globe3D = lazy(() => import("./Globe3D.jsx"));
 
@@ -89,9 +90,7 @@ export default function IntroGlobe({ onDone }) {
       {/* Barre supérieure : identité de mission + statut + horloge */}
       <header className="absolute inset-x-0 top-0 flex items-center justify-between gap-4 px-8 py-6 sm:px-12">
         <div className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-full border border-blue-200/30 bg-white/5">
-            <Satellite size={16} className="text-blue-100" />
-          </span>
+          <Logo size={40} decorative className="shadow-[0_0_22px_rgba(63,208,224,.35)]" />
           <div className="leading-tight">
             <p className="text-sm font-semibold tracking-wide">Dancing with the SARs</p>
             <p className={`text-[11px] uppercase tracking-[0.25em] text-blue-200/60 ${mono}`}>
