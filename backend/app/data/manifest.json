@@ -1,0 +1,316 @@
+{
+  "zone": "Douala - estuaire du Wouri (DONNEES D'EXEMPLE, pas des mesures)",
+  "factices": true,
+  "acquisitions": [
+    {
+      "date": "2026-06-18",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-06-18.png",
+      "water_png": "layers/water_2026-06-18.png",
+      "flood_png": "layers/flood_2026-06-18.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-06-30",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-06-30.png",
+      "water_png": "layers/water_2026-06-30.png",
+      "flood_png": "layers/flood_2026-06-30.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-07-12",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-07-12.png",
+      "water_png": "layers/water_2026-07-12.png",
+      "flood_png": "layers/flood_2026-07-12.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-07-24",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-07-24.png",
+      "water_png": "layers/water_2026-07-24.png",
+      "flood_png": "layers/flood_2026-07-24.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-08-17",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-08-17.png",
+      "water_png": "layers/water_2026-08-17.png",
+      "flood_png": "layers/flood_2026-08-17.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-08-29",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-08-29.png",
+      "water_png": "layers/water_2026-08-29.png",
+      "flood_png": "layers/flood_2026-08-29.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-09-10",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-09-10.png",
+      "water_png": "layers/water_2026-09-10.png",
+      "flood_png": "layers/flood_2026-09-10.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-09-22",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-09-22.png",
+      "water_png": "layers/water_2026-09-22.png",
+      "flood_png": "layers/flood_2026-09-22.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-10-04",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-10-04.png",
+      "water_png": "layers/water_2026-10-04.png",
+      "flood_png": "layers/flood_2026-10-04.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "periode": "pluies",
+      "maturite": "PROVISIONAL",
+      "orbite": {
+        "piste": 58,
+        "frame": 4,
+        "sens": "A"
+      },
+      "backscatter_png": "layers/sigma_2026-10-16.png",
+      "water_png": "layers/water_2026-10-16.png",
+      "flood_png": "layers/flood_2026-10-16.png",
+      "coordinates": [
+        [
+          9.55,
+          4.25
+        ],
+        [
+          9.95,
+          4.25
+        ],
+        [
+          9.95,
+          3.85
+        ],
+        [
+          9.55,
+          3.85
+        ]
+      ]
+    }
+  ]
+}
