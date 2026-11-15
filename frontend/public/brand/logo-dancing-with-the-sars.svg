@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="512" height="512" role="img" aria-label="Logo Dancing with the SARs">
+<style>
+@keyframes pulse{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+.p1,.p2,.p3{animation:pulse 2.4s ease-out infinite}.p2{animation-delay:.3s}.p3{animation-delay:.6s}
+@keyframes flow{to{stroke-dashoffset:-260}}
+.w1,.w2{stroke-dasharray:230 30;animation:flow 7s linear infinite}.w2{animation-direction:reverse}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-100px)}}
+.river{animation:drift 9s linear infinite}.river2{animation:drift 6s linear infinite}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(.7) rotate(45deg);opacity:.7}}
+.star{transform-box:fill-box;transform-origin:center;animation:twinkle 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(140px,42px) rotate(35deg)}50%{transform:translate(143px,39px) rotate(38deg)}}
+.sat{animation:bob 4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:.9}}
+.d1{animation:blink 2.6s infinite}.d2{animation:blink 3.4s infinite 1s}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<defs><clipPath id="c"><circle cx="100" cy="100" r="92"/></clipPath></defs>
+<circle cx="100" cy="100" r="96" fill="#0B1D3A" stroke="#3FD0E0" stroke-width="2"/>
+<g clip-path="url(#c)">
+<g fill="none" stroke="#3FD0E0" stroke-linecap="round">
+<path class="p1" d="M128 52 A40 40 0 0 1 148 72" stroke-width="3"/>
+<path class="p2" d="M116 44 A58 58 0 0 1 156 84" stroke-width="3"/>
+<path class="p3" d="M104 36 A76 76 0 0 1 164 96" stroke-width="3"/>
+</g>
+<path class="river" d="M-5 150 C25 135 45 160 75 145 S125 130 145 145 S175 135 195 150 S245 160 275 145 S325 130 345 145 L345 220 L-5 220Z" fill="#12406B"/>
+<path class="river2" d="M-5 162 C25 148 45 172 75 158 S125 142 145 158 S175 148 195 162 S245 172 275 158 S325 142 345 158" fill="none" stroke="#3FD0E0" stroke-width="2" opacity=".7"/>
+<path d="M60 210 C70 185 88 172 100 160 C112 172 124 185 140 210Z" fill="#0B1D3A" opacity=".55"/>
+<path class="w1" d="M28 112 C48 72 68 72 84 104 S116 136 136 98 S168 66 184 96" fill="none" stroke="#F39A3B" stroke-width="7" stroke-linecap="round"/>
+<path class="w2" d="M28 104 C48 136 68 136 84 108 S116 72 136 104 S168 128 184 104" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+<g class="sat"><rect x="-5" y="-4" width="10" height="8" rx="1.5" fill="#FFFFFF"/><rect x="-21" y="-3" width="13" height="6" fill="#3FD0E0"/><rect x="8" y="-3" width="13" height="6" fill="#3FD0E0"/></g>
+<path class="star" d="M58 40 L61 50 L71 53 L61 56 L58 66 L55 56 L45 53 L55 50Z" fill="#F39A3B"/>
+<circle class="d1" cx="40" cy="78" r="2" fill="#FFFFFF"/>
+<circle class="d2" cx="170" cy="120" r="1.6" fill="#FFFFFF"/>
+</g>
+</svg>

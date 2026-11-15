@@ -10,7 +10,7 @@ from pathlib import Path
 from PIL import Image
 
 FROZEN = {
-    "schema_version": "1.0",
+    "schema_version": "2.0",
     "bbox": [9.55, 3.90, 9.90, 4.20],
     "crs": "EPSG:4326",
     "image_size": [1400, 1200],
@@ -18,7 +18,7 @@ FROZEN = {
 }
 MAX_PNG_MB = 3.0
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-STATS_REQUIRED = ["water_area_km2", "water_fraction", "valid_fraction", "threshold_db", "mean_hh_db"]
+STATS_REQUIRED = ["water_area_km2", "water_fraction", "valid_fraction", "threshold_db", "mean_vv_db"]
 
 
 def main(data_dir):
@@ -77,7 +77,7 @@ def main(data_dir):
             warns.append(f"{p} données FACTICES (mock)")
 
         layers = a.get("layers", {})
-        for req in ("backscatter_hh", "water_mask"):
+        for req in ("backscatter_vv", "water_mask"):
             if req not in layers:
                 err(f"{p} couche obligatoire absente : {req}")
         for name, rel in layers.items():
