@@ -9,7 +9,7 @@ export async function loadManifest() {
   const res = await fetch(`${BASE}manifest.json`);
   if (!res.ok) throw new Error(`manifest.json introuvable (${res.status})`);
   const manifest = await res.json();
-  if (manifest.schema_version !== "1.0") {
+  if (manifest.schema_version !== "2.0") {
     throw new Error(`Version de contrat non supportée : ${manifest.schema_version}`);
   }
   return manifest;
@@ -36,13 +36,13 @@ export function waterSeries(manifest) {
     season: a.season,
     water: a.stats.water_area_km2,
     newWater: a.stats.new_water_km2, // null pour la scène de référence
-    meanDb: a.stats.mean_hh_db,
+    meanDb: a.stats.mean_vv_db,
     mock: a.mock,
   }));
 }
 
 // Ajoute ou met à jour une image géoréférencée sur la carte (M1/M2).
-// layerKey : "backscatter_hh" | "water_mask" | "new_water_mask" | "backscatter_hv"
+// layerKey : "backscatter_vv" | "water_mask" | "new_water_mask" | "backscatter_hv"
 export function showLayer(map, manifest, acquisition, layerKey, { opacity = 1 } = {}) {
   const rel = acquisition.layers[layerKey];
   if (!rel) return false;
