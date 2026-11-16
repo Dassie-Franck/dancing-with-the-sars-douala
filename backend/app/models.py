@@ -1,66 +1,68 @@
-"""Modèles de données = le CONTRAT (voir tâche B0.1 du document).
+"""Modèles Pydantic : copie du contrat de données v2.0 (docs/CONTRAT_DONNEES.md)."""
+from typing import Literal, Optional
 
-Un modèle Pydantic décrit la forme exacte d'un objet JSON. Si un fichier
-de données ne respecte pas cette forme, l'API refuse de démarrer et dit
-quel champ est faux : c'est notre contrôle automatique du contrat.
-"""
-from typing import Dict, List, Optional
-
-from pydantic import BaseModel, Field, field_validator
-
-DATE_PATTERN = r'^\d{4}-\d{2}-\d{2}$'   # AAAA-MM-JJ
+from pydantic import BaseModel, ConfigDict
 
 
-class Orbite(BaseModel):
-    piste: int
-    frame: int
-    sens: str = Field(pattern=r'^[AD]$')      # A = ascendante, D = descendante
+class AcqStats(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    water_area_km2: float
+    new_water_km2: Optional[float] = None      # null pour la scène de référence
+    water_fraction: float
+    valid_fraction: float
+    threshold_db: float
+    mean_vv_db: float
 
 
 class Acquisition(BaseModel):
-    date: str = Field(pattern=DATE_PATTERN)
-    periode: str                               # 'pluies', 'transition' ou 'seche'
-    maturite: str                              # 'PROVISIONAL', 'VALIDATED', 'BETA'
-    orbite: Orbite
-    backscatter_png: str                       # chemin relatif, ex. 'layers/sigma_2026-08-29.png'
-    water_png: str
-    flood_png: Optional[str] = None
-    coordinates: List[List[float]]             # 4 coins [longitude, latitude]
-
-    @field_validator('coordinates')
-    @classmethod
-    def verifier_coins(cls, coins):
-        if len(coins) != 4 or any(len(c) != 2 for c in coins):
-            raise ValueError('coordinates doit contenir 4 points [longitude, latitude]')
-        return coins
+    model_config = ConfigDict(extra="allow")   # champs optionnels futurs (ex. satellite)
+    id: str
+    date: str
+    datetime_utc: str
+    season: Literal["dry", "rain"]
+    orbit: Optional[str] = None
+    polarizations: list[str]
+    product: Optional[str] = None
+    maturity: Literal["VALIDATED", "PROVISIONAL", "BETA", "MOCK"]
+    mock: bool
+    partial: bool
+    satellite: Optional[str] = None
+    layers: dict[str, str]
+    stats: AcqStats
 
 
 class Manifest(BaseModel):
-    zone: str
-    factices: bool = False                     # True = données d'exemple (à supprimer en vrai)
-    acquisitions: List[Acquisition]
+    model_config = ConfigDict(extra="allow")
+    schema_version: Literal["2.0"]
+    generated_at: str
+    project: str
+    aoi: dict
+    db_range: list[float]
+    water_style: dict
+    threshold_default_db: float
+    min_valid_fraction: float
+    reference_id: str
+    acquisitions: list[Acquisition]
 
 
-class PointEau(BaseModel):
-    date: str = Field(pattern=DATE_PATTERN)
+class WaterPoint(BaseModel):
+    date: str
     surface_km2: float
-    inondee_km2: Optional[float] = None
     backscatter_db: float
 
 
-class Stats(BaseModel):
-    nb_dates: int
-    surface_min_km2: float
-    date_min: str
-    surface_max_km2: float
-    date_max: str
-    variation_pct: Optional[float] = None       # (max - min) / min * 100
-    moyenne_par_periode: Dict[str, float]
-    inondee_max_km2: Optional[float] = None
+class SeasonSummary(BaseModel):
+    n: int
+    mean_km2: Optional[float] = None
 
 
-class Sante(BaseModel):
-    status: str
-    nb_acquisitions: int
-    nb_points_serie: int
-    donnees_factices: bool
+class StatsResponse(BaseModel):
+    n_acquisitions: int
+    min_km2: float
+    min_date: str
+    max_km2: float
+    max_date: str
+    dry: SeasonSummary
+    rain: SeasonSummary
+    variation_pct_rain_vs_dry: Optional[float] = None
+    note: str

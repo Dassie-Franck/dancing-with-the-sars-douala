@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0",
-  "generated_at": "2026-11-14T11:29:47Z",
+  "schema_version": "2.0",
+  "generated_at": "2026-11-15T21:09:19Z",
   "project": "dancing-with-the-sars-douala",
   "aoi": {
     "name": "Douala – estuaire du Wouri",
@@ -24,115 +24,455 @@
     "color": "#22d3ee",
     "opacity": 0.67
   },
-  "threshold_default_db": -18.0,
+  "threshold_default_db": -14.0,
   "min_valid_fraction": 0.9,
-  "reference_id": "2026-01-15",
+  "reference_id": "2025-12-03",
   "acquisitions": [
     {
-      "id": "2026-01-15",
-      "date": "2026-01-15",
-      "datetime_utc": "2026-01-15T05:30:00Z",
+      "id": "2025-12-03",
+      "date": "2025-12-03",
+      "datetime_utc": "2025-12-03T00:00:00Z",
       "season": "dry",
       "orbit": "A",
       "polarizations": [
-        "HH"
+        "VV"
       ],
-      "product": null,
-      "maturity": "MOCK",
-      "mock": true,
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
       "partial": false,
+      "satellite": "S1A",
       "layers": {
-        "backscatter_hh": "layers/2026-01-15_backscatter_hh.png",
-        "water_mask": "layers/2026-01-15_water_mask.png"
+        "backscatter_vv": "layers/2025-12-03_backscatter_vv.png",
+        "water_mask": "layers/2025-12-03_water_mask.png"
       },
       "stats": {
-        "water_area_km2": 128.85,
+        "water_area_km2": 210.16,
         "new_water_km2": null,
-        "water_fraction": 0.0999,
+        "water_fraction": 0.1623,
         "valid_fraction": 1.0,
-        "threshold_db": -18.0,
-        "mean_hh_db": -9.31
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.77
       }
     },
     {
-      "id": "2026-04-21",
-      "date": "2026-04-21",
-      "datetime_utc": "2026-04-21T05:30:00Z",
-      "season": "rain",
+      "id": "2025-12-15",
+      "date": "2025-12-15",
+      "datetime_utc": "2025-12-15T00:00:00Z",
+      "season": "dry",
       "orbit": "A",
       "polarizations": [
-        "HH"
+        "VV"
       ],
-      "product": null,
-      "maturity": "MOCK",
-      "mock": true,
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
       "partial": false,
+      "satellite": "S1A",
       "layers": {
-        "backscatter_hh": "layers/2026-04-21_backscatter_hh.png",
-        "water_mask": "layers/2026-04-21_water_mask.png",
-        "new_water_mask": "layers/2026-04-21_new_water_mask.png"
+        "backscatter_vv": "layers/2025-12-15_backscatter_vv.png",
+        "water_mask": "layers/2025-12-15_water_mask.png",
+        "new_water_mask": "layers/2025-12-15_new_water_mask.png"
       },
       "stats": {
-        "water_area_km2": 129.866,
-        "new_water_km2": 1.017,
-        "water_fraction": 0.1007,
+        "water_area_km2": 201.91,
+        "new_water_km2": 1.937,
+        "water_fraction": 0.1559,
         "valid_fraction": 1.0,
-        "threshold_db": -18.0,
-        "mean_hh_db": -9.33
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.71
       }
     },
     {
-      "id": "2026-07-26",
-      "date": "2026-07-26",
-      "datetime_utc": "2026-07-26T05:30:00Z",
-      "season": "rain",
+      "id": "2025-12-27",
+      "date": "2025-12-27",
+      "datetime_utc": "2025-12-27T00:00:00Z",
+      "season": "dry",
       "orbit": "A",
       "polarizations": [
-        "HH"
+        "VV"
       ],
-      "product": null,
-      "maturity": "MOCK",
-      "mock": true,
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
       "partial": false,
+      "satellite": "S1A",
       "layers": {
-        "backscatter_hh": "layers/2026-07-26_backscatter_hh.png",
-        "water_mask": "layers/2026-07-26_water_mask.png",
-        "new_water_mask": "layers/2026-07-26_new_water_mask.png"
+        "backscatter_vv": "layers/2025-12-27_backscatter_vv.png",
+        "water_mask": "layers/2025-12-27_water_mask.png",
+        "new_water_mask": "layers/2025-12-27_new_water_mask.png"
       },
       "stats": {
-        "water_area_km2": 139.03,
-        "new_water_km2": 10.181,
-        "water_fraction": 0.1078,
+        "water_area_km2": 206.69,
+        "new_water_km2": 1.822,
+        "water_fraction": 0.1596,
         "valid_fraction": 1.0,
-        "threshold_db": -18.0,
-        "mean_hh_db": -9.45
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.83
       }
     },
     {
-      "id": "2026-10-02",
-      "date": "2026-10-02",
-      "datetime_utc": "2026-10-02T05:30:00Z",
+      "id": "2026-01-08",
+      "date": "2026-01-08",
+      "datetime_utc": "2026-01-08T00:00:00Z",
+      "season": "dry",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1A",
+      "layers": {
+        "backscatter_vv": "layers/2026-01-08_backscatter_vv.png",
+        "water_mask": "layers/2026-01-08_water_mask.png",
+        "new_water_mask": "layers/2026-01-08_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 209.86,
+        "new_water_km2": 2.19,
+        "water_fraction": 0.162,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -8.05
+      }
+    },
+    {
+      "id": "2026-02-01",
+      "date": "2026-02-01",
+      "datetime_utc": "2026-02-01T00:00:00Z",
+      "season": "dry",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1A",
+      "layers": {
+        "backscatter_vv": "layers/2026-02-01_backscatter_vv.png",
+        "water_mask": "layers/2026-02-01_water_mask.png",
+        "new_water_mask": "layers/2026-02-01_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 206.84,
+        "new_water_km2": 2.415,
+        "water_fraction": 0.1597,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.9
+      }
+    },
+    {
+      "id": "2026-02-13",
+      "date": "2026-02-13",
+      "datetime_utc": "2026-02-13T00:00:00Z",
+      "season": "dry",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1A",
+      "layers": {
+        "backscatter_vv": "layers/2026-02-13_backscatter_vv.png",
+        "water_mask": "layers/2026-02-13_water_mask.png",
+        "new_water_mask": "layers/2026-02-13_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 208.85,
+        "new_water_km2": 2.105,
+        "water_fraction": 0.1613,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.96
+      }
+    },
+    {
+      "id": "2026-02-25",
+      "date": "2026-02-25",
+      "datetime_utc": "2026-02-25T00:00:00Z",
+      "season": "dry",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1A",
+      "layers": {
+        "backscatter_vv": "layers/2026-02-25_backscatter_vv.png",
+        "water_mask": "layers/2026-02-25_water_mask.png",
+        "new_water_mask": "layers/2026-02-25_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 178.5,
+        "new_water_km2": 2.025,
+        "water_fraction": 0.1378,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.61
+      }
+    },
+    {
+      "id": "2026-06-25",
+      "date": "2026-06-25",
+      "datetime_utc": "2026-06-25T00:00:00Z",
       "season": "rain",
       "orbit": "A",
       "polarizations": [
-        "HH"
+        "VV"
       ],
-      "product": null,
-      "maturity": "MOCK",
-      "mock": true,
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
       "partial": false,
+      "satellite": "S1A",
       "layers": {
-        "backscatter_hh": "layers/2026-10-02_backscatter_hh.png",
-        "water_mask": "layers/2026-10-02_water_mask.png",
-        "new_water_mask": "layers/2026-10-02_new_water_mask.png"
+        "backscatter_vv": "layers/2026-06-25_backscatter_vv.png",
+        "water_mask": "layers/2026-06-25_water_mask.png",
+        "new_water_mask": "layers/2026-06-25_new_water_mask.png"
       },
       "stats": {
-        "water_area_km2": 256.059,
-        "new_water_km2": 127.209,
-        "water_fraction": 0.1986,
+        "water_area_km2": 204.89,
+        "new_water_km2": 2.045,
+        "water_fraction": 0.1582,
         "valid_fraction": 1.0,
-        "threshold_db": -18.0,
-        "mean_hh_db": -11.0
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.61
+      }
+    },
+    {
+      "id": "2026-07-02",
+      "date": "2026-07-02",
+      "datetime_utc": "2026-07-02T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-07-02_backscatter_vv.png",
+        "water_mask": "layers/2026-07-02_water_mask.png",
+        "new_water_mask": "layers/2026-07-02_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 210.36,
+        "new_water_km2": 2.572,
+        "water_fraction": 0.1624,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.81
+      }
+    },
+    {
+      "id": "2026-07-14",
+      "date": "2026-07-14",
+      "datetime_utc": "2026-07-14T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-07-14_backscatter_vv.png",
+        "water_mask": "layers/2026-07-14_water_mask.png",
+        "new_water_mask": "layers/2026-07-14_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 209.85,
+        "new_water_km2": 2.636,
+        "water_fraction": 0.162,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.51
+      }
+    },
+    {
+      "id": "2026-08-07",
+      "date": "2026-08-07",
+      "datetime_utc": "2026-08-07T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-08-07_backscatter_vv.png",
+        "water_mask": "layers/2026-08-07_water_mask.png",
+        "new_water_mask": "layers/2026-08-07_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 206.64,
+        "new_water_km2": 1.798,
+        "water_fraction": 0.1596,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.54
+      }
+    },
+    {
+      "id": "2026-08-19",
+      "date": "2026-08-19",
+      "datetime_utc": "2026-08-19T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-08-19_backscatter_vv.png",
+        "water_mask": "layers/2026-08-19_water_mask.png",
+        "new_water_mask": "layers/2026-08-19_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 208.98,
+        "new_water_km2": 1.993,
+        "water_fraction": 0.1614,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.61
+      }
+    },
+    {
+      "id": "2026-09-12",
+      "date": "2026-09-12",
+      "datetime_utc": "2026-09-12T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-09-12_backscatter_vv.png",
+        "water_mask": "layers/2026-09-12_water_mask.png",
+        "new_water_mask": "layers/2026-09-12_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 210.23,
+        "new_water_km2": 2.372,
+        "water_fraction": 0.1623,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.61
+      }
+    },
+    {
+      "id": "2026-09-24",
+      "date": "2026-09-24",
+      "datetime_utc": "2026-09-24T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-09-24_backscatter_vv.png",
+        "water_mask": "layers/2026-09-24_water_mask.png",
+        "new_water_mask": "layers/2026-09-24_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 202.87,
+        "new_water_km2": 2.007,
+        "water_fraction": 0.1567,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.47
+      }
+    },
+    {
+      "id": "2026-10-18",
+      "date": "2026-10-18",
+      "datetime_utc": "2026-10-18T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-10-18_backscatter_vv.png",
+        "water_mask": "layers/2026-10-18_water_mask.png",
+        "new_water_mask": "layers/2026-10-18_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 210.56,
+        "new_water_km2": 2.773,
+        "water_fraction": 0.1626,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -7.85
+      }
+    },
+    {
+      "id": "2026-10-30",
+      "date": "2026-10-30",
+      "datetime_utc": "2026-10-30T00:00:00Z",
+      "season": "rain",
+      "orbit": "A",
+      "polarizations": [
+        "VV"
+      ],
+      "product": "SENTINEL1_RTC30_HYP3",
+      "maturity": "VALIDATED",
+      "mock": false,
+      "partial": false,
+      "satellite": "S1D",
+      "layers": {
+        "backscatter_vv": "layers/2026-10-30_backscatter_vv.png",
+        "water_mask": "layers/2026-10-30_water_mask.png",
+        "new_water_mask": "layers/2026-10-30_new_water_mask.png"
+      },
+      "stats": {
+        "water_area_km2": 212.06,
+        "new_water_km2": 3.375,
+        "water_fraction": 0.1638,
+        "valid_fraction": 1.0,
+        "threshold_db": -14.0,
+        "mean_vv_db": -8.16
       }
     }
   ]
