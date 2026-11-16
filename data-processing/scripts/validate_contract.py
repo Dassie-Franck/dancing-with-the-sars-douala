@@ -1,6 +1,8 @@
 """Valide frontend/public/data par rapport à docs/CONTRAT_DONNEES.md.
-Usage : python data-processing/scripts/validate_contract.py [dossier_data]
+Usage : python data-processing/scripts/validate_contract.py [dossier_data] [--strict]
 Code de sortie 0 = conforme, 1 = erreurs.
+Schémas acceptés : 1.0 (NISAR, HH) et 2.0 (Sentinel-1 VV, ou tout capteur : HH ou VV).
+--strict : refuse aussi les données factices (mock), à utiliser avant une mise en production.
 """
 import json
 import re
@@ -9,8 +11,8 @@ from pathlib import Path
 
 from PIL import Image
 
+SCHEMAS = {"1.0", "2.0"}
 FROZEN = {
-    "schema_version": "1.0",
     "bbox": [9.55, 3.90, 9.90, 4.20],
     "crs": "EPSG:4326",
     "image_size": [1400, 1200],
@@ -18,10 +20,12 @@ FROZEN = {
 }
 MAX_PNG_MB = 3.0
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-STATS_REQUIRED = ["water_area_km2", "water_fraction", "valid_fraction", "threshold_db", "mean_hh_db"]
+STATS_REQUIRED = ["water_area_km2", "water_fraction", "valid_fraction", "threshold_db"]
+CO_POL = ("hh", "vv")
+LAYER_RE = re.compile(r"^[A-Za-z0-9_-]+(/[A-Za-z0-9_.-]+)*\.png$")
 
 
-def main(data_dir):
+def main(data_dir, strict=False):
     data = Path(data_dir)
     errors, warns = [], []
     mf = data / "manifest.json"
@@ -36,8 +40,8 @@ def main(data_dir):
 
     def err(msg): errors.append(msg)
 
-    if m.get("schema_version") != FROZEN["schema_version"]:
-        err(f"schema_version doit être {FROZEN['schema_version']}")
+    if m.get("schema_version") not in SCHEMAS:
+        err(f"schema_version doit être l'une de {sorted(SCHEMAS)}")
     aoi = m.get("aoi", {})
     for key in ("bbox", "crs", "image_size"):
         if aoi.get(key) != FROZEN[key]:
@@ -74,13 +78,20 @@ def main(data_dir):
         if not isinstance(a.get("mock"), bool):
             err(f"{p} mock doit être un booléen")
         if a.get("mock"):
-            warns.append(f"{p} données FACTICES (mock)")
+            (err if strict else warns.append)(f"{p} données FACTICES (mock)")
 
         layers = a.get("layers", {})
-        for req in ("backscatter_hh", "water_mask"):
-            if req not in layers:
-                err(f"{p} couche obligatoire absente : {req}")
+        pol = next((c for c in CO_POL if f"backscatter_{c}" in layers), None)
+        if pol is None:
+            err(f"{p} couche obligatoire absente : backscatter_hh ou backscatter_vv")
+        if "water_mask" not in layers:
+            err(f"{p} couche obligatoire absente : water_mask")
         for name, rel in layers.items():
+            if rel is None:
+                continue
+            if not LAYER_RE.match(rel) or ".." in rel.split("/"):
+                err(f"{p} chemin refusé (relatif, sans « .. », .png) : {rel}")
+                continue
             f = data / rel
             if not f.exists():
                 err(f"{p} fichier manquant : {rel}")
@@ -95,7 +106,7 @@ def main(data_dir):
                 warns.append(f"{p} {rel} pèse {mb:.1f} Mo (> {MAX_PNG_MB} Mo)")
 
         s = a.get("stats", {})
-        for k in STATS_REQUIRED:
+        for k in STATS_REQUIRED + ([f"mean_{pol}_db"] if pol else []):
             if not isinstance(s.get(k), (int, float)):
                 err(f"{p} stats.{k} manquant ou non numérique")
         if isinstance(s.get("water_area_km2"), (int, float)) and s["water_area_km2"] < 0:
@@ -109,6 +120,16 @@ def main(data_dir):
         if isinstance(vf, (int, float)) and a.get("partial") != (vf < m.get("min_valid_fraction", 0.9)):
             err(f"{p} partial incohérent avec valid_fraction")
 
+    comp = data / "composites.json"
+    if comp.exists():
+        c = json.loads(comp.read_text(encoding="utf-8"))
+        for season, layers in c.items():
+            for key, rel in layers.items():
+                if key == "coordinates" or rel is None:
+                    continue
+                if not LAYER_RE.match(rel) or ".." in rel.split("/") or not (data / rel).exists():
+                    err(f"composites.{season}.{key} : fichier manquant ou chemin refusé ({rel})")
+
     for w in warns:
         print("AVERTISSEMENT :", w)
     for e in errors:
@@ -119,4 +140,5 @@ def main(data_dir):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1] if len(sys.argv) > 1 else "frontend/public/data"))
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    sys.exit(main(args[0] if args else "frontend/public/data", strict="--strict" in sys.argv))

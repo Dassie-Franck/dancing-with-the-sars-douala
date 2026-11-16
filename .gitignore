@@ -27,3 +27,15 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 pythonProject1/
+
+# Variables locales (jamais versionnées)
+.env.*
+!.env.example
+
+# Sorties du pipeline (les données publiées sont dans frontend/public/data)
+data-processing/output/*
+!data-processing/output/.gitkeep
+
+# Backend
+backend/.venv/
+.pytest_cache/

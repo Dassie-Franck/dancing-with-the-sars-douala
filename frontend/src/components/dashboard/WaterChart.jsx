@@ -17,6 +17,7 @@ import {
 import { seasonPeriods } from "../../domain/season";
 import { C, SEASON_COLOR } from "../../ui/theme";
 import { SEASON_LABEL, fDate, fShortTs, nf } from "../../ui/format";
+import { tr, useI18n } from "../../i18n";
 
 const DAY = 864e5;
 const ts = (d) => new Date(`${d}T00:00:00`).getTime();
@@ -27,11 +28,11 @@ function ChartTooltip({ active, payload }) {
   return (
     <div className="rounded-md border border-sar-line bg-black px-2.5 py-2 text-xs text-sar-ink shadow-lg">
       <div className="mb-1 text-sar-ink2">
-        {fDate(p.date)} · {SEASON_LABEL[p.season] ?? p.season}
+        {fDate(p.date)} · {SEASON_LABEL[p.season] ? tr(SEASON_LABEL[p.season]) : p.season}
       </div>
-      <Row color={C.water} label="Eau détectée" value={`${nf(p.water)} km²`} />
-      <Row color={C.veg} label="Eau nouvelle" value={p.newWater == null ? "référence" : `${nf(p.newWater)} km²`} />
-      <Row color={C.ink2} label="HH moyen" value={`${nf(p.meanDb, 2)} dB`} />
+      <Row color={C.water} label={tr("Eau détectée")} value={`${nf(p.water)} km²`} />
+      <Row color={C.veg} label={tr("Eau nouvelle")} value={p.newWater == null ? tr("référence") : `${nf(p.newWater)} km²`} />
+      <Row color={C.ink2} label={tr("{pol} moyen", { pol: p.pol })} value={`${nf(p.meanDb, 2)} dB`} />
     </div>
   );
 }
@@ -44,11 +45,12 @@ const Row = ({ color, label, value }) => (
   </div>
 );
 
-export function ChartLegend() {
+export function ChartLegend({ pol = "" }) {
+  const { t } = useI18n();
   const items = [
-    [C.water, "Eau détectée (km²)", false],
-    [C.veg, "Eau nouvelle vs référence (km²)", false],
-    [C.ink2, "Rétrodiffusion HH moyenne (dB)", true],
+    [C.water, t("Eau détectée (km²)"), false],
+    [C.veg, t("Eau nouvelle vs référence (km²)"), false],
+    [C.ink2, t("Rétrodiffusion {pol} moyenne (dB)", { pol }).replace("  ", " "), true],
   ];
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-sar-ink2">
@@ -67,6 +69,7 @@ export function ChartLegend() {
 
 // acquisitions : modèle du domaine ; on en tire ici les points du graphique (vue)
 export default function WaterChart({ acquisitions, selectedId, onSelect, height = 300 }) {
+  const { t } = useI18n();
   const data = useMemo(
     () =>
       acquisitions.map((a) => ({
@@ -76,7 +79,8 @@ export default function WaterChart({ acquisitions, selectedId, onSelect, height 
         t: ts(a.date),
         water: a.waterAreaKm2,
         newWater: a.newWaterKm2,
-        meanDb: a.meanHhDb,
+        meanDb: a.meanDb,
+        pol: a.polarization ?? "",
       })),
     [acquisitions]
   );
@@ -105,7 +109,7 @@ export default function WaterChart({ acquisitions, selectedId, onSelect, height 
   // Largeur d'une bande en pixels (zone de tracé = largeur - axes) : le libellé n'apparaît que s'il tient
   const plotW = Math.max(0, width - 48 - 40 + 2);
   const bandPx = (b) => ((b.b - b.a) / (domain[1] - domain[0])) * plotW;
-  const fits = (b) => bandPx(b) > SEASON_LABEL[b.season].length * 6.3 + 12;
+  const fits = (b) => bandPx(b) > t(SEASON_LABEL[b.season]).length * 6.3 + 12;
 
   const dot = (color, rSel, r) =>
     function Dot({ cx, cy, payload, index }) {
@@ -160,7 +164,7 @@ export default function WaterChart({ acquisitions, selectedId, onSelect, height 
               ifOverflow="hidden"
               label={
                 fits(b)
-                  ? { value: SEASON_LABEL[b.season].toLowerCase(), position: "insideTopLeft", fill: SEASON_COLOR[b.season], fontSize: 10.5, opacity: 0.9 }
+                  ? { value: t(SEASON_LABEL[b.season]).toLowerCase(), position: "insideTopLeft", fill: SEASON_COLOR[b.season], fontSize: 10.5, opacity: 0.9 }
                   : undefined
               }
             />

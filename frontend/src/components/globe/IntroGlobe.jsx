@@ -4,20 +4,26 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { ArrowRight, Crosshair, Radio } from "lucide-react";
 import Logo from "../brand/Logo";
+import LangSwitch from "../brand/LangSwitch";
+import { useI18n } from "../../i18n";
 
 const Globe3D = lazy(() => import("./Globe3D.jsx"));
 
 const FLY_MS = 2500; // doit rester égal à FLY_MS dans Globe3D.jsx
 
-// Fiche cible : uniquement des valeurs vérifiées (mission NISAR, centre de MapView)
-const TELEMETRY = [
-  ["Cible", "Douala · Wouri"],
-  ["Coordonnées", "4.0511° N  9.7679° E"],
-  ["Capteur", "NISAR L-SAR"],
-  ["Longueur d’onde", "≈ 24 cm (bande L)"],
-  ["Polarisations", "HH · HV"],
-  ["Revisite", "12 jours"],
-];
+// Fiche cible : centre de la zone d'étude et capteur réellement utilisé, lu dans les données (manifest).
+function telemetry(sensor, t, lang) {
+  const wait = "…";
+  const cm = (v) => (lang === "fr" ? String(v).replace(".", ",") : String(v));
+  return [
+    [t("Cible"), "Douala · Wouri"],
+    [t("Coordonnées"), "4.0511° N  9.7679° E"],
+    [t("Capteur"), sensor ? [sensor.name, sensor.instrument].filter(Boolean).join(" ") : wait],
+    [t("Longueur d’onde"), sensor?.wavelengthCm ? t("≈ {cm} cm (bande {band})", { cm: cm(sensor.wavelengthCm), band: sensor.band }) : sensor ? "–" : wait],
+    [t("Polarisation"), sensor ? sensor.polarizations.join(" · ") || "–" : wait],
+    [t("Revisite"), sensor?.revisitDays ? t("{n} jours", { n: sensor.revisitDays }) : sensor ? "–" : wait],
+  ];
+}
 
 // Sans WebGL (vieux téléphone, navigateur bloqué), on saute le globe.
 function hasWebGL() {
@@ -54,7 +60,10 @@ function FrameCorners() {
   );
 }
 
-export default function IntroGlobe({ onDone }) {
+export default function IntroGlobe({ onDone, sensor }) {
+  const { t, lang } = useI18n();
+  const TELEMETRY = telemetry(sensor, t, lang);
+  const sensorName = sensor?.name ?? "satellite";
   const [flying, setFlying] = useState(false);
   const [webgl] = useState(hasWebGL);
   const clock = useUtcClock();
@@ -74,11 +83,11 @@ export default function IntroGlobe({ onDone }) {
       <Suspense
         fallback={
           <p className={`absolute inset-0 grid place-items-center text-xs uppercase tracking-[0.3em] text-blue-200/60 ${mono}`}>
-            Initialisation du globe…
+            {t("Initialisation du globe…")}
           </p>
         }
       >
-        <Globe3D flying={flying} onArrived={done} />
+        <Globe3D flying={flying} onArrived={done} label={t("Douala · estuaire du Wouri")} />
       </Suspense>
 
       {/* Voile pour la lisibilité : vignette + dégradé bas */}
@@ -104,10 +113,11 @@ export default function IntroGlobe({ onDone }) {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
             </span>
-            Données NISAR
+            {t("Données {sensor}", { sensor: sensorName })}
           </span>
           <span>{clock}</span>
         </div>
+        <LangSwitch variant="intro" className="ml-auto sm:ml-0" />
       </header>
 
       {/* Fiche cible (télémétrie) – à droite, écrans larges */}
@@ -116,7 +126,7 @@ export default function IntroGlobe({ onDone }) {
           bg-space-900/50 backdrop-blur-md transition-opacity duration-500 lg:block ${flying ? "opacity-0" : "opacity-100"}`}
       >
         <div className="flex items-center justify-between border-b border-blue-200/15 px-5 py-3">
-          <span className={`text-[11px] uppercase tracking-[0.25em] text-blue-200/70 ${mono}`}>Fiche cible</span>
+          <span className={`text-[11px] uppercase tracking-[0.25em] text-blue-200/70 ${mono}`}>{t("Fiche cible")}</span>
           <Radio size={14} className="text-blue-200/70" />
         </div>
         <dl className="divide-y divide-blue-200/10 px-5">
@@ -136,13 +146,13 @@ export default function IntroGlobe({ onDone }) {
       >
         <p className={`mb-4 flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-blue-200/80 ${mono}`}>
           <span className="h-px w-8 bg-blue-200/60" />
-          Observation radar<span className="hidden sm:inline">&nbsp;· Golfe de Guinée</span>
+          {t("Observation radar")}<span className="hidden sm:inline">&nbsp;· {t("Golfe de Guinée")}</span>
         </p>
         <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
-          Douala,
+          {t("Douala,")}
           <br />
           <span className="bg-gradient-to-r from-white via-blue-100 to-blue-300 bg-clip-text text-transparent">
-            vue par le radar NISAR
+            {t("vue par le radar {sensor}", { sensor: sensor?.name ?? "" })}
           </span>
         </h1>
         
@@ -153,14 +163,14 @@ export default function IntroGlobe({ onDone }) {
               shadow-[0_0_40px_rgba(147,197,253,0.35)] transition hover:shadow-[0_0_56px_rgba(147,197,253,0.6)]
               focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-space-900"
           >
-            Explorer Douala
+            {t("Explorer Douala")}
             <ArrowRight size={16} className="transition group-hover:translate-x-0.5" />
           </button>
           <button
             onClick={done}
             className={`text-[11px] uppercase tracking-[0.25em] text-blue-100/60 underline-offset-8 transition hover:text-white hover:underline ${mono}`}
           >
-            Accéder au tableau de bord
+            {t("Accéder au tableau de bord")}
           </button>
         </div>
       </section>
@@ -177,7 +187,7 @@ export default function IntroGlobe({ onDone }) {
             className={`absolute left-1/2 top-[calc(50%+72px)] -translate-x-1/2 text-center text-[11px] uppercase
               tracking-[0.3em] text-blue-100 ${mono}`}
           >
-            Acquisition de la cible
+            {t("Acquisition de la cible")}
             <div className="mx-auto mt-3 h-px w-48 overflow-hidden bg-blue-200/20">
               <div
                 className="h-full bg-white"

@@ -16,13 +16,17 @@ export function useServices() {
 }
 
 // Exécute une tâche asynchrone et expose { status, data, error } ; ignore les réponses périmées.
+// status : "idle" (rien à calculer), "loading", "ready", "error".
 function useAsync(run, deps) {
   const [state, setState] = useState({ status: "loading", data: null, error: null, key: null });
   const key = JSON.stringify(deps);
   useEffect(() => {
     let alive = true;
     const p = run();
-    if (!p) return;
+    if (!p) {
+      setState({ status: "idle", data: null, error: null, key });
+      return;
+    }
     setState((s) => ({ ...s, status: "loading", key }));
     p.then((data) => alive && setState({ status: "ready", data, error: null, key })).catch(
       (error) => alive && setState({ status: "error", data: null, error, key })
@@ -54,4 +58,43 @@ export function useQuartierExposure(catalog) {
   const { quartierExposure } = useServices();
   const s = useAsync(() => (catalog ? quartierExposure(catalog) : null), [!!catalog]);
   return { status: s.status, exposure: s.data, error: s.error };
+}
+
+/** Liste des quartiers suivis (recherche de l'en-tête). */
+export function useQuartiers() {
+  const { listQuartiers } = useServices();
+  const s = useAsync(() => listQuartiers(), ["quartiers"]);
+  return s.data ?? [];
+}
+
+/** Fréquence d'inondation par pixel, toutes dates confondues. */
+export function useFloodFrequency(catalog, enabled = true) {
+  const { floodFrequencyMap } = useServices();
+  const s = useAsync(() => (catalog && enabled ? floodFrequencyMap(catalog) : null), [!!catalog, enabled]);
+  return { status: s.status, frequency: s.data, error: s.error };
+}
+
+/** Atelier du seuil pour une date. */
+export function useThresholdStudy(catalog, id, thresholdDb) {
+  const { thresholdStudy } = useServices();
+  const s = useAsync(() => (catalog && id ? thresholdStudy(catalog, id, thresholdDb) : null), [id, thresholdDb, !!catalog]);
+  return { status: s.status, study: s.data, error: s.error };
+}
+
+/** Inspection d'un point de la carte (null = aucun point choisi). */
+export function useProbe(catalog, id, point) {
+  const { probePoint } = useServices();
+  const s = useAsync(
+    () => (catalog && id && point ? probePoint(catalog, id, point.lon, point.lat) : null),
+    [id, point?.lon, point?.lat, !!catalog]
+  );
+  return { status: s.status, probe: s.data, error: s.error };
+}
+
+/** Source de données configurée et réellement utilisée (indicateur K13). */
+export function useDataSource(catalog) {
+  const { dataMode, apiUrl } = useServices();
+  const source = catalog?.source ?? null;
+  const state = dataMode === "static" ? "static" : source === "api" ? "api" : source ? "fallback" : "pending";
+  return { mode: dataMode, state, apiUrl };
 }

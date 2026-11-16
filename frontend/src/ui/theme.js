@@ -21,3 +21,5 @@ export const SEASON_COLOR = { dry: C.dry, rain: C.water };
 export const RISK_COLOR = { high: C.bad, mid: C.veg, low: C.acc };
 // Comparaison de deux dates : eau gagnée / rendue
 export const CHANGE_RGB = { gained: [0, 200, 255], lost: [255, 150, 20] };
+// Fréquence d'inondation : rouge (risque), de plus en plus opaque avec le nombre de dates en eau
+export const frequencyRgba = (ratio) => [250, Math.round(70 - ratio * 40), Math.round(80 - ratio * 20), Math.round(110 + ratio * 145)];

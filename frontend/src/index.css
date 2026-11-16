@@ -61,6 +61,16 @@ body {
 /* Carte des quartiers : repères et fiche dans la charte */
 .sar-pin { background: none; border: 0; padding: 0; cursor: pointer; transition: transform .15s ease; }
 .sar-pin:hover, .sar-pin:focus-visible { transform: translateY(-2px) scale(1.08); outline: none; }
+/* Repère avec nom (observatoire) : l'étiquette est posée à droite de l'icône, sans décaler le point d'ancrage */
+.sar-pin-icon { display: block; line-height: 0; }
+.sar-pin-label {
+  position: absolute; left: calc(100% + 3px); top: 3px; white-space: nowrap; pointer-events: none;
+  font: 600 11.5px/1 Inter, system-ui, sans-serif; color: #fff; letter-spacing: .01em;
+  text-shadow: 0 0 3px #000, 0 0 3px #000, 0 1px 2px #000;
+}
+.sar-pin-label--left { left: auto; right: calc(100% + 3px); }
+.sar-pin:hover .sar-pin-label, .sar-pin:focus-visible .sar-pin-label { color: var(--acc); }
+.sar-obs .maplibregl-marker:hover, .sar-obs .maplibregl-marker:focus-within { z-index: 20 !important; }
 .sar-popup .maplibregl-popup-content {
   background: #000; color: var(--ink); border: 1px solid var(--line); border-radius: 8px;
   padding: 8px 11px; font: 12px/1.45 Inter, system-ui, sans-serif; box-shadow: 0 10px 34px rgba(0,0,0,.55);
@@ -75,6 +85,33 @@ body {
 .sar-qmap .maplibregl-ctrl-group button .maplibregl-ctrl-icon { filter: invert(.85); }
 .sar-qmap .maplibregl-ctrl-attrib { background: rgba(7,9,13,.75) !important; color: var(--mut); }
 .sar-qmap .maplibregl-ctrl-attrib a { color: var(--ink2); }
+
+/* Observatoire : contrôles MapLibre au-dessus de la chronologie, réticule du point inspecté */
+.sar-obs .maplibregl-ctrl-bottom-right, .sar-obs .maplibregl-ctrl-bottom-left { bottom: 84px; }
+.sar-obs .maplibregl-ctrl-group { background: var(--sf) !important; border: 1px solid var(--line); }
+.sar-obs .maplibregl-ctrl-group button + button { border-top-color: var(--line) !important; }
+.sar-obs .maplibregl-ctrl-group button .maplibregl-ctrl-icon { filter: invert(.85); }
+.sar-obs .maplibregl-ctrl-attrib { background: rgba(7,9,13,.75) !important; color: var(--mut); }
+.sar-obs .maplibregl-ctrl-attrib a { color: var(--ink2); }
+.sar-obs .maplibregl-ctrl-scale { background: rgba(7,9,13,.7); color: var(--ink2); border-color: var(--ink2); font-family: "JetBrains Mono", monospace; }
+.sar-probe { width: 30px; height: 30px; pointer-events: none;
+  background:
+    radial-gradient(circle, transparent 7px, #fff 7px, #fff 8.5px, transparent 8.5px),
+    linear-gradient(#fff, #fff) center / 1.5px 100% no-repeat,
+    linear-gradient(#fff, #fff) center / 100% 1.5px no-repeat;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,.9)); }
+
+/* Schémas pédagogiques (« Ce que voit le radar ») : mêmes couleurs que l'application */
+.sar-schema svg { width: 100%; height: auto; max-height: 360px; }
+.sar-schema text { font: 11px "JetBrains Mono", monospace; fill: var(--ink2); }
+.sar-schema .s-w { stroke: var(--water); } .sar-schema .f-w { fill: var(--water); }
+.sar-schema .s-m { stroke: var(--mang); } .sar-schema .f-m { fill: var(--mang); }
+.sar-schema .s-d { stroke: var(--dry); } .sar-schema .f-d { fill: var(--dry); }
+.sar-schema .s-a { stroke: var(--acc); } .sar-schema .f-a { fill: var(--acc); }
+.sar-schema .s-l { stroke: var(--line); } .sar-schema .s-i { stroke: var(--ink); } .sar-schema .f-i { fill: var(--ink); }
+.sar-schema .f-s2 { fill: var(--sf2); } .sar-schema .f-mut { fill: var(--mut); } .sar-schema .s-mut { stroke: var(--mut); }
+.sar-schema .wv { stroke-dasharray: 6 6; animation: sar-wave 1.2s linear infinite; }
+@keyframes sar-wave { to { stroke-dashoffset: -24; } }
 
 /* Recharts : textes d'axes dans la police des mesures */
 .recharts-cartesian-axis-tick-value { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10.5px; }

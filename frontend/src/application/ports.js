@@ -4,16 +4,21 @@
 // Brancher le backend = écrire (ou finir) un adaptateur ; rien d'autre ne change.
 
 /**
- * Source des acquisitions radar (aujourd'hui manifest.json factice, demain l'API FastAPI).
+ * Source des acquisitions radar (public/data/manifest.json ou l'API FastAPI).
  * @typedef {Object} SarRepository
  * @property {() => Promise<import("../domain/model").RawCatalog>} getCatalog
  */
 
 /**
- * Lecture d'un masque d'eau sous forme de tableau de pixels (> 0 = eau), à la taille de la grille.
- * @typedef {Object} MaskReader
+ * Lecture des couches raster d'une acquisition, à la taille de la grille.
+ * @typedef {Object} RasterReader
  * @property {(acquisition: import("../domain/model").Acquisition,
  *             area: import("../domain/model").StudyArea) => Promise<Uint8Array>} readWaterMask
+ *   masque d'eau : valeur > 0 = eau
+ * @property {(acquisition: import("../domain/model").Acquisition,
+ *             area: import("../domain/model").StudyArea,
+ *             dbRange: [number, number]) => Promise<Float32Array>} readBackscatterDb
+ *   rétrodiffusion (co-polarisation) en dB ; NaN = sans donnée
  */
 
 /**
@@ -32,6 +37,6 @@ export function assertPort(name, adapter, methods) {
 
 export const PORTS = {
   SarRepository: ["getCatalog"],
-  MaskReader: ["readWaterMask"],
+  RasterReader: ["readWaterMask", "readBackscatterDb"],
   QuartierRepository: ["listQuartiers"],
 };

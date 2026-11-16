@@ -6,8 +6,10 @@ import { useState } from "react";
 import { useQuartierExposure } from "../../app/services";
 import { EXPOSURE_RADIUS_KM, RISK_THRESHOLDS } from "../../domain/exposure";
 import { floodLevel } from "../../domain/waterStats";
+import { satelliteLabel } from "../../domain/sensor";
 import { C, RISK_COLOR } from "../../ui/theme";
-import { RISK_LABEL, fDate, fShort, nf, signed } from "../../ui/format";
+import { useI18n } from "../../i18n";
+import { RISK_LABEL, fDate, fShort, nf, polOf, signed } from "../../ui/format";
 import Donut from "./Donut";
 import QuartiersMap from "./QuartiersMap";
 import SectorGlobe, { SeasonChip } from "./SectorGlobe";
@@ -17,12 +19,14 @@ import WaterChart, { ChartLegend } from "./WaterChart";
  *           onSelect: (id: string) => void, active: boolean, onNavigate: (view: string) => void}} props */
 export default function Dashboard({ catalog, selectedId, onSelect, active, onNavigate }) {
   const { studyArea, acquisitions, stats, referenceId } = catalog;
+  const pol = polOf(catalog);
+  const { t } = useI18n();
   const { status: expoStatus, exposure, error: expoError } = useQuartierExposure(catalog);
   const [focusId, setFocusId] = useState(null);
 
   const acq = acquisitions.find((a) => a.id === selectedId);
   const ref = acquisitions.find((a) => a.id === referenceId);
-  if (!stats || !acq) return <p className="p-6 text-sar-ink2">Aucune acquisition exploitable.</p>;
+  if (!stats || !acq) return <p className="p-6 text-sar-ink2">{t("Aucune acquisition exploitable.")}</p>;
 
   const flood = floodLevel(acq, stats);
   const ranking = exposure?.byAcquisition[acq.id] ?? null;
@@ -40,24 +44,25 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
         <section className="sar-card">
           <header className="mb-3 flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h3 className="text-[15px] font-semibold">Acquisition sélectionnée</h3>
+              <h3 className="text-[15px] font-semibold">{t("Acquisition sélectionnée")}</h3>
               <p className="sar-cap">{fDate(acq.date)}</p>
             </div>
             <SeasonChip season={acq.season} />
           </header>
           <div className="grid grid-cols-[1fr_128px] items-center gap-4">
             <dl className="space-y-1.5 text-[12.5px]">
-              <Kv dot={C.water} k="Eau détectée" v={`${nf(acq.waterAreaKm2)} km²`} />
-              <Kv dot={C.veg} k="Eau nouvelle" v={acq.newWaterKm2 == null ? "scène de référence" : `${nf(acq.newWaterKm2)} km²`} />
-              <Kv dot={C.ink2} k="HH moyen" v={`${nf(acq.meanHhDb, 2)} dB`} />
-              <Kv k="Seuil eau" v={`HH < ${nf(acq.thresholdDb)} dB`} />
-              <Kv k="Couverture valide" v={`${nf(acq.validFraction * 100, 0)} %`} />
-              <Kv k="Orbite · polar." v={`${acq.orbit ?? "–"} · ${acq.polarizations.join("/")}`} />
-              <Kv k="Maturité" v={acq.maturity} />
+              <Kv dot={C.water} k={t("Eau détectée")} v={`${nf(acq.waterAreaKm2)} km²`} />
+              <Kv dot={C.veg} k={t("Eau nouvelle")} v={acq.newWaterKm2 == null ? t("scène de référence") : `${nf(acq.newWaterKm2)} km²`} />
+              <Kv dot={C.ink2} k={t("{pol} moyen", { pol: acq.polarization ?? pol })} v={`${nf(acq.meanDb, 2)} dB`} />
+              <Kv k={t("Seuil eau")} v={`${acq.polarization ?? pol} < ${nf(acq.thresholdDb)} dB`} />
+              <Kv k={t("Couverture valide")} v={`${nf(acq.validFraction * 100, 0)} %`} />
+              <Kv k={t("Satellite")} v={acq.satellite ? satelliteLabel(acq.satellite) : catalog.sensor.name} />
+              <Kv k={t("Orbite · polar.")} v={`${acq.orbit ?? "–"} · ${acq.polarizations.join("/")}`} />
+              <Kv k={t("Maturité")} v={acq.maturity} />
             </dl>
-            <Donut parts={[[acq.waterFraction, C.water]]} label={`${nf(acq.waterFraction * 100)} % de l'emprise en eau`}>
+            <Donut parts={[[acq.waterFraction, C.water]]} label={t("{pct} % de l’emprise en eau", { pct: nf(acq.waterFraction * 100) })}>
               <b className="text-[22px] font-semibold tracking-tight">{nf(acq.waterFraction * 100)}%</b>
-              <span className="text-[11px] leading-tight text-sar-mut">de l’emprise<br />en eau</span>
+              <span className="text-[11px] leading-tight text-sar-mut">{t("de l’emprise")}<br />{t("en eau")}</span>
             </Donut>
           </div>
         </section>
@@ -65,45 +70,45 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
         <section className="sar-card flex flex-col">
           <header className="flex items-start justify-between gap-2">
             <div>
-              <h3 className="text-[15px] font-semibold">Niveau de crue</h3>
-              <p className="sar-cap">entre l’étiage et le pic observés</p>
+              <h3 className="text-[15px] font-semibold">{t("Niveau de crue")}</h3>
+              <p className="sar-cap">{t("entre l’étiage et le pic observés")}</p>
             </div>
-            {flood.severity === "high" && <span className="sar-chip bg-sar-bad/15 text-sar-bad">Alerte</span>}
+            {flood.severity === "high" && <span className="sar-chip bg-sar-bad/15 text-sar-bad">{t("Alerte")}</span>}
           </header>
-          <Donut parts={[[flood.ratio, RISK_COLOR[flood.severity]]]} className="mx-auto my-3 max-w-[170px]" label={`${Math.round(flood.ratio * 100)} % du pic`}>
+          <Donut parts={[[flood.ratio, RISK_COLOR[flood.severity]]]} className="mx-auto my-3 max-w-[170px]" label={t("{pct} % du pic", { pct: Math.round(flood.ratio * 100) })}>
             <b className="text-[25px] font-semibold tracking-tight">{Math.round(flood.ratio * 100)}%</b>
             <span className="text-[11px] leading-tight text-sar-mut">
               {signed(flood.aboveLowKm2)} km²
               <br />
-              au-dessus de l’étiage
+              {t("au-dessus de l’étiage")}
             </span>
           </Donut>
           <div className="mt-auto space-y-1 text-[12px]">
-            <Kv k="Étiage" v={`${fShort(stats.minDate)} · ${nf(stats.minKm2)} km²`} />
-            <Kv k="Pic" v={`${fShort(stats.maxDate)} · ${nf(stats.maxKm2)} km²`} />
+            <Kv k={t("Étiage")} v={`${fShort(stats.minDate)} · ${nf(stats.minKm2)} km²`} />
+            <Kv k={t("Pic")} v={`${fShort(stats.maxDate)} · ${nf(stats.maxKm2)} km²`} />
           </div>
         </section>
       </div>
 
       {/* Ligne 2 : indicateurs (même définition que GET /api/stats) */}
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        <Tile label="Surface minimale" value={nf(stats.minKm2)} unit="km²" cap={`étiage, ${fShort(stats.minDate)}`} />
-        <Tile label="Surface maximale" value={nf(stats.maxKm2)} unit="km²" cap={`pic de crue, ${fShort(stats.maxDate)}`} accent={C.bad} />
+        <Tile label={t("Surface minimale")} value={nf(stats.minKm2)} unit="km²" cap={t("étiage, {date}", { date: fShort(stats.minDate) })} />
+        <Tile label={t("Surface maximale")} value={nf(stats.maxKm2)} unit="km²" cap={t("pic de crue, {date}", { date: fShort(stats.maxDate) })} accent={C.bad} />
         <Tile
-          label="Variation saisonnière"
+          label={t("Variation saisonnière")}
           value={stats.seasonalVariationPct == null ? "–" : signed(stats.seasonalVariationPct)}
           unit="%"
           cap={
             stats.seasonalVariationPct == null
-              ? "il manque une date de saison sèche ou des pluies"
-              : `moyenne ${nf(stats.meanDryKm2)} → ${nf(stats.meanRainKm2)} km²`
+              ? t("il manque une date de saison sèche ou des pluies")
+              : t("moyenne {a} → {b} km²", { a: nf(stats.meanDryKm2), b: nf(stats.meanRainKm2) })
           }
         />
         <Tile
-          label="Eau nouvelle"
+          label={t("Eau nouvelle")}
           value={acq.newWaterKm2 == null ? "–" : nf(acq.newWaterKm2)}
           unit={acq.newWaterKm2 == null ? "" : "km²"}
-          cap={acq.newWaterKm2 == null ? "date de référence" : `le ${fShort(acq.date)}, vs ${fShort(ref?.date ?? referenceId)}`}
+          cap={acq.newWaterKm2 == null ? t("date de référence") : t("le {date}, vs {ref}", { date: fShort(acq.date), ref: fShort(ref?.date ?? referenceId) })}
           accent={C.veg}
         />
       </div>
@@ -113,10 +118,10 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
         <section className="sar-card">
           <header className="mb-2 flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h3 className="text-[15px] font-semibold">Suivi temporel de la surface en eau</h3>
-              <p className="sar-cap">Cliquez un point pour changer de date dans toute l’application.</p>
+              <h3 className="text-[15px] font-semibold">{t("Suivi temporel de la surface en eau")}</h3>
+              <p className="sar-cap">{t("Cliquez un point pour changer de date dans toute l’application.")}</p>
             </div>
-            <ChartLegend />
+            <ChartLegend pol={pol} />
           </header>
           <WaterChart acquisitions={acquisitions} selectedId={selectedId} onSelect={onSelect} height={300} />
         </section>
@@ -124,15 +129,15 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
         <section className="sar-card flex flex-col">
           <header className="mb-3 flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h3 className="text-[15px] font-semibold">Quartiers sous surveillance</h3>
-              <p className="sar-cap">Exposition à l’eau détectée le {fShort(acq.date)}</p>
+              <h3 className="text-[15px] font-semibold">{t("Quartiers sous surveillance")}</h3>
+              <p className="sar-cap">{t("Exposition à l’eau détectée le {date}", { date: fShort(acq.date) })}</p>
             </div>
             <div className="flex items-center gap-2">
               {ranking && (
-                <span className={`sar-chip ${nHigh ? "bg-sar-bad/15 text-sar-bad" : "bg-sar-sf2 text-sar-ink2"}`}>{nHigh} en alerte</span>
+                <span className={`sar-chip ${nHigh ? "bg-sar-bad/15 text-sar-bad" : "bg-sar-sf2 text-sar-ink2"}`}>{t("{n} en alerte", { n: nHigh })}</span>
               )}
               <button className="sar-btn h-[28px] px-2.5 text-[12px]" onClick={() => onNavigate("carte")}>
-                Ouvrir la carte
+                {t("Ouvrir la carte")}
               </button>
             </div>
           </header>
@@ -153,11 +158,11 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <section className="sar-card flex flex-col">
           <header className="mb-2">
-            <h3 className="text-[15px] font-semibold">Exposition des quartiers</h3>
-            <p className="sar-cap">Part du sol gagnée par l’eau dans un rayon de {EXPOSURE_RADIUS_KM} km, eau permanente exclue</p>
+            <h3 className="text-[15px] font-semibold">{t("Exposition des quartiers")}</h3>
+            <p className="sar-cap">{t("Part du sol gagnée par l’eau dans un rayon de {km} km, eau permanente exclue", { km: EXPOSURE_RADIUS_KM })}</p>
           </header>
-          {expoStatus === "loading" && <p className="py-6 text-[12.5px] text-sar-mut">Calcul de l’exposition…</p>}
-          {expoStatus === "error" && <p className="py-6 text-[12.5px] text-sar-bad">Exposition indisponible : {expoError.message}</p>}
+          {expoStatus === "loading" && <p className="py-6 text-[12.5px] text-sar-mut">{t("Calcul de l’exposition…")}</p>}
+          {expoStatus === "error" && <p className="py-6 text-[12.5px] text-sar-bad">{t("Exposition indisponible :")} {expoError.message}</p>}
           <ol className="m-0 list-none p-0">
             {(ranking ?? []).map(({ quartier, pct, risk }, i) => {
               const on = focusId === quartier.id;
@@ -178,7 +183,7 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
                     </span>
                     <span className="text-right font-mono text-[12px] text-sar-ink">{nf(pct)} %</span>
                     <span className="sar-chip justify-center" style={{ background: `${color}26`, color }}>
-                      {RISK_LABEL[risk]}
+                      {t(RISK_LABEL[risk])}
                     </span>
                   </button>
                 </li>
@@ -186,24 +191,22 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
             })}
           </ol>
           <p className="mt-auto pt-3 text-[12px] leading-relaxed text-sar-mut">
-            Élevée à partir de {RISK_THRESHOLDS.high} %, modérée à partir de {RISK_THRESHOLDS.mid} % (seuils indicatifs). Dans le bâti dense,
-            l’eau entre les immeubles reste invisible au radar : ces valeurs sont des minimums.
+            {t("Élevée à partir de {high} %, modérée à partir de {mid} % (seuils indicatifs). Dans le bâti dense, l’eau entre les immeubles reste invisible au radar : ces valeurs sont des minimums.", { high: RISK_THRESHOLDS.high, mid: RISK_THRESHOLDS.mid })}
           </p>
         </section>
 
         <section className="sar-card flex flex-col">
           <header className="mb-2">
-            <h3 className="text-[15px] font-semibold">Acquisitions</h3>
+            <h3 className="text-[15px] font-semibold">{t("Acquisitions")}</h3>
             <p className="sar-cap">
-              {acquisitions.length} date{acquisitions.length > 1 ? "s" : ""} exploitable{acquisitions.length > 1 ? "s" : ""} · référence{" "}
-              {fShort(ref?.date ?? referenceId)}
+              {t(acquisitions.length > 1 ? "{n} dates exploitables · référence {ref}" : "{n} date exploitable · référence {ref}", { n: acquisitions.length, ref: fShort(ref?.date ?? referenceId) })}
             </p>
           </header>
           <div className="-mx-2 overflow-x-auto">
             <table className="w-full border-collapse text-[12.5px]">
               <thead>
                 <tr className="text-left">
-                  {["Date", "Saison", "Eau", "Δ réf.", "HH"].map((h) => (
+                  {[t("Date"), t("Saison"), t("Eau"), t("Δ réf."), pol || "dB"].map((h) => (
                     <th key={h} className="sar-lab border-b border-sar-line px-2 py-2 font-medium">
                       {h}
                     </th>
@@ -230,7 +233,7 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
                       </td>
                       <td className={`${td} font-mono text-sar-ink`}>{nf(a.waterAreaKm2)} km²</td>
                       <td className={`${td} font-mono text-sar-ink2`}>{ref ? signed(a.waterAreaKm2 - ref.waterAreaKm2) : "–"}</td>
-                      <td className={`${td} font-mono text-sar-ink2`}>{nf(a.meanHhDb, 1)} dB</td>
+                      <td className={`${td} font-mono text-sar-ink2`}>{nf(a.meanDb, 1)} dB</td>
                     </tr>
                   );
                 })}
@@ -238,8 +241,7 @@ export default function Dashboard({ catalog, selectedId, onSelect, active, onNav
             </table>
           </div>
           <p className="mt-auto pt-3 text-[12px] leading-relaxed text-sar-mut">
-            Seuil d’eau : HH &lt; {nf(catalog.defaultThresholdDb)} dB, hypothèse non validée sur le terrain. Vent, marée et bâti dense peuvent
-            fausser le masque. Saisons : sèche de décembre à février, pluies de mars à novembre.
+            {t("Seuil d’eau : {pol} < {db} dB, hypothèse non validée sur le terrain. Vent, marée et bâti dense peuvent fausser le masque. Saisons : sèche de décembre à février, pluies de mars à novembre.", { pol, db: nf(catalog.defaultThresholdDb) })}
           </p>
         </section>
       </div>

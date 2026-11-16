@@ -3,14 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Globe from "react-globe.gl";
  
-// Même centre que MapView (Douala / estuaire du Wouri)
+// Centre de Douala / estuaire du Wouri
 const DOUALA = { lat: 4.0511, lng: 9.7679 };
  
 const START_VIEW = { lat: 10, lng: 15, altitude: 2.4 }; // Afrique, vue lointaine
 const ZOOM_VIEW = { ...DOUALA, altitude: 0.35 };        // vue proche sur Douala
 const FLY_MS = 2500;                                    // durée du zoom (ms)
  
-export default function Globe3D({ flying, onArrived }) {
+export default function Globe3D({ flying, onArrived, label = "Douala · estuaire du Wouri" }) {
   const globeRef = useRef();
   const wrapRef = useRef();
   const [size, setSize] = useState({ w: 0, h: 0 });
@@ -48,8 +48,8 @@ export default function Globe3D({ flying, onArrived }) {
   }, [flying, ready, onArrived]);
  
   const marker = useMemo(
-    () => [{ ...DOUALA, label: "Douala · estuaire du Wouri" }],
-    []
+    () => [{ ...DOUALA, label }],
+    [label]
   );
  
   return (

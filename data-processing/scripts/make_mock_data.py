@@ -3,7 +3,7 @@
 Permet au frontend (M1-M3) de se développer avant l'arrivée des vraies données NISAR.
 Usage (depuis la racine du projet) :
     python data-processing/scripts/make_mock_data.py [dossier_sortie]
-Par défaut : frontend/public/data
+Par défaut : data-processing/output/mock (jamais frontend/public/data, qui contient les VRAIES données)
 Tout est marqué "mock": true dans le manifest.
 """
 import datetime as dt
@@ -125,4 +125,4 @@ def main(out_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "frontend/public/data")
+    main(sys.argv[1] if len(sys.argv) > 1 else "data-processing/output/mock")

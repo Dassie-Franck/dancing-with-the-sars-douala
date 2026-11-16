@@ -1,4 +1,19 @@
-# Contrat de données — v1.0 (tâche 6, bloquante)
+# Contrat de données — v1.0, étendu en v2.0 (tâche 6, bloquante)
+
+> **Version en vigueur : 2.0** (données livrées le 15 novembre 2026, dans `frontend/public/data/`).
+> La v2.0 garde tout ce qui suit (bbox, grille 1400 × 1200, échelle [-30, 0] dB, saisons, PNG RGBA), avec ces différences :
+>
+> | Champ | v1.0 | v2.0 |
+> |---|---|---|
+> | `schema_version` | `"1.0"` | `"2.0"` |
+> | Capteur | NISAR GCOV, bande L | **Sentinel-1 RTC (HyP3), bande C**, en attendant NISAR |
+> | Rétrodiffusion | `layers.backscatter_hh`, `stats.mean_hh_db` | `layers.backscatter_vv`, `stats.mean_vv_db` (la polarisation se lit sur le nom de la couche) |
+> | Seuil d'eau | `-18 dB` en HH | `threshold_default_db = -14 dB` en VV |
+> | Nouveaux champs par date | — | `satellite` (`S1A`, `S1D`), `product`, `mock: false` |
+> | Composites | — | `composites.json` facultatif : `{dry, rain}` avec `backscatter_vv` et `water_mask` |
+>
+> Le site et l'API acceptent les deux versions. Chemins d'image : toujours relatifs (`layers/….png`), sans `..` ni URL externe, sinon le manifest est refusé.
+> Vérification : `python data-processing/scripts/validate_contract.py --strict`.
 
 **Pourquoi ce document est bloquant** : l'équipe *données* (Python / Colab) produit des fichiers, l'équipe *frontend* (React / MapLibre / Recharts) les consomme. Tant que le format n'est pas figé, personne ne peut avancer en parallèle. Ce contrat fixe **exactement** ce qui est échangé. Il est accompagné de données factices conformes (`make_mock_data.py`) pour que le frontend démarre dès maintenant.
 

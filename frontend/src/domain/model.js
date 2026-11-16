@@ -15,8 +15,8 @@
 /**
  * Couches image d'une acquisition (URL prêtes à afficher, ou null si absente).
  * @typedef {Object} AcquisitionLayers
- * @property {string|null} backscatterHh
- * @property {string|null} backscatterHv
+ * @property {string|null} backscatter       rétrodiffusion en co-polarisation (HH ou VV selon le capteur)
+ * @property {string|null} backscatterCross  rétrodiffusion en polarisation croisée (HV ou VH), facultative
  * @property {string|null} waterMask
  * @property {string|null} newWaterMask
  */
@@ -29,15 +29,40 @@
  * @property {"dry"|"rain"} season
  * @property {string|null} orbit
  * @property {string[]} polarizations
+ * @property {string|null} polarization  co-polarisation affichée (« VV », « HH »)
+ * @property {string|null} satellite     ex. « S1A »
+ * @property {string|null} product       ex. « SENTINEL1_RTC30_HYP3 »
  * @property {string} maturity
- * @property {boolean} isMock          donnée factice
+ * @property {boolean} isMock          donnée factice (doit être false en production)
  * @property {number} waterAreaKm2     eau détectée (permanente + inondée)
  * @property {number|null} newWaterKm2 eau absente de la référence ; null pour la référence
  * @property {number} waterFraction    part de l'emprise en eau (0–1)
  * @property {number} validFraction    part de l'emprise couverte (0–1)
- * @property {number} thresholdDb      seuil HH utilisé pour le masque
- * @property {number} meanHhDb         rétrodiffusion HH moyenne
+ * @property {number} thresholdDb      seuil de rétrodiffusion utilisé pour le masque
+ * @property {number|null} meanDb      rétrodiffusion moyenne de l'emprise (co-polarisation)
  * @property {AcquisitionLayers} layers
+ */
+
+/**
+ * Image composite d'une saison (moyenne de plusieurs passages), sans date ni statistiques.
+ * @typedef {Object} SeasonComposite
+ * @property {string} id
+ * @property {"dry"|"rain"} season
+ * @property {{backscatter: string|null, waterMask: string|null}} layers
+ */
+
+/**
+ * Capteur à l'origine des images, déduit du manifest (domain/sensor.js).
+ * @typedef {Object} Sensor
+ * @property {string} name               « Sentinel-1 », « NISAR »…
+ * @property {string|null} instrument
+ * @property {string|null} band          « C », « L »
+ * @property {number|null} wavelengthCm
+ * @property {number|null} revisitDays
+ * @property {string|null} polarization  co-polarisation affichée
+ * @property {string[]} polarizations
+ * @property {string[]} satellites       libellés lisibles
+ * @property {string[]} products
  */
 
 /**
@@ -47,7 +72,10 @@
  * @property {string} referenceId         scène de référence « eau permanente »
  * @property {number} defaultThresholdDb
  * @property {number} minValidFraction
+ * @property {[number, number]} dbRange    échelle dB des PNG de rétrodiffusion (gris 0 -> lo, 255 -> hi)
+ * @property {"static"|"api"} source       d'où viennent réellement les données
  * @property {Acquisition[]} acquisitions triées par date
+ * @property {{dry?: SeasonComposite, rain?: SeasonComposite}} [composites]
  */
 
 /**

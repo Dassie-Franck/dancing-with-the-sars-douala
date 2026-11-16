@@ -6,65 +6,10 @@ import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { C, RISK_COLOR } from "../../ui/theme";
 import { RISK_LABEL, nf } from "../../ui/format";
-
-// Fond OpenStreetMap (même source que la carte principale, sans clé), passé en sombre :
-// niveaux de gris + luminosité inversée (min > max) => rues claires sur fond noir.
-const DARK_STYLE = {
-  version: 8,
-  sources: {
-    osm: {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      maxzoom: 19,
-      attribution: "© OpenStreetMap contributors",
-    },
-  },
-  layers: [
-    { id: "bg", type: "background", paint: { "background-color": "#0b0e13" } },
-    {
-      id: "osm-dark",
-      type: "raster",
-      source: "osm",
-      paint: {
-        "raster-saturation": -1,
-        "raster-brightness-min": 0.92,
-        "raster-brightness-max": 0.06,
-        "raster-contrast": 0.15,
-        "raster-opacity": 0.9,
-      },
-    },
-  ],
-};
+import { useI18n } from "../../i18n";
+import { baseStyle, bboxBounds, pinSvg, setImageLayer } from "../map/mapKit";
 
 const FIT = { padding: 48 };
-
-function pinSvg(color) {
-  return `<svg width="26" height="34" viewBox="0 0 26 34" aria-hidden="true">
-    <path d="M13 33s11-11.2 11-19.5A11 11 0 0 0 2 13.5C2 21.8 13 33 13 33z" fill="${color}" stroke="rgba(0,0,0,.45)" stroke-width="1"/>
-    <circle cx="13" cy="13.5" r="4.2" fill="#06121a"/></svg>`;
-}
-
-// Image géoréférencée posée sur l'emprise d'étude (mise à jour sans recréer la couche)
-function setImageLayer(map, id, url, { bbox }, opacity) {
-  const coordinates = [
-    [bbox.west, bbox.north],
-    [bbox.east, bbox.north],
-    [bbox.east, bbox.south],
-    [bbox.west, bbox.south],
-  ];
-  const src = map.getSource(id);
-  if (!url) {
-    if (map.getLayer(id)) map.removeLayer(id);
-    if (src) map.removeSource(id);
-    return;
-  }
-  if (src) src.updateImage({ url, coordinates });
-  else {
-    map.addSource(id, { type: "image", url, coordinates });
-    map.addLayer({ id, type: "raster", source: id, paint: { "raster-opacity": opacity, "raster-fade-duration": 0 } });
-  }
-}
 
 const boundsOf = (quartiers) => {
   const lons = quartiers.map((q) => q.lon);
@@ -83,6 +28,7 @@ const boundsOf = (quartiers) => {
  *          focusId: string | null, onFocus: (id: string|null) => void}} props
  */
 export default function QuartiersMap({ studyArea, acquisition, quartiers, ranking, focusId, onFocus }) {
+  const { t } = useI18n();
   const boxRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef({});
@@ -95,14 +41,10 @@ export default function QuartiersMap({ studyArea, acquisition, quartiers, rankin
 
   // Création de la carte, cadrée sur l'emprise d'étude
   useEffect(() => {
-    const { bbox } = studyArea;
     const map = new maplibregl.Map({
       container: boxRef.current,
-      style: DARK_STYLE,
-      bounds: [
-        [bbox.west, bbox.south],
-        [bbox.east, bbox.north],
-      ],
+      style: baseStyle("dark"),
+      bounds: bboxBounds(studyArea),
       fitBoundsOptions: FIT,
       attributionControl: { compact: true },
       cooperativeGestures: true,
@@ -146,8 +88,8 @@ export default function QuartiersMap({ studyArea, acquisition, quartiers, rankin
   useEffect(() => {
     const map = mapRef.current;
     if (!loaded || !map || !acquisition) return;
-    setImageLayer(map, "sar-water", acquisition.layers.waterMask, studyArea, 0.5);
-    setImageLayer(map, "sar-new-water", acquisition.layers.newWaterMask, studyArea, 0.75);
+    setImageLayer(map, "sar-water", acquisition.layers.waterMask, studyArea, { opacity: 0.5 });
+    setImageLayer(map, "sar-new-water", acquisition.layers.newWaterMask, studyArea, { opacity: 0.75 });
   }, [loaded, acquisition, studyArea]);
 
   // Couleur des repères selon l'exposition
@@ -159,11 +101,11 @@ export default function QuartiersMap({ studyArea, acquisition, quartiers, rankin
       const color = RISK_COLOR[risk];
       const el = m.getElement();
       el.innerHTML = pinSvg(color);
-      el.title = `${quartier.name} · ${nf(pct)} % · exposition ${RISK_LABEL[risk].toLowerCase()}`;
+      el.title = `${quartier.name} · ${nf(pct)} % · ${t("exposition {level}", { level: t(RISK_LABEL[risk]).toLowerCase() })}`;
       el.style.filter = `drop-shadow(0 0 8px ${color}88)`;
       el.style.zIndex = risk === "high" ? 3 : risk === "mid" ? 2 : 1;
     });
-  }, [ranking, quartiers]);
+  }, [ranking, quartiers, t]);
 
   // Quartier mis en avant : recentrage + fiche
   useEffect(() => {
@@ -174,13 +116,23 @@ export default function QuartiersMap({ studyArea, acquisition, quartiers, rankin
     if (!r) return;
     const { quartier, pct, risk } = r;
     map.easeTo({ center: [quartier.lon, quartier.lat], zoom: Math.max(map.getZoom(), 12.5), duration: 700 });
+    // Fiche construite en nœuds DOM (textContent) : aucun texte n'est interprété comme du HTML
+    const card = document.createElement("div");
+    const add = (tag, text, color) => {
+      const n = document.createElement(tag);
+      n.textContent = text;
+      if (color) n.style.color = color;
+      card.append(n);
+    };
+    add("b", quartier.name);
+    add("span", t("{pct} % du sol gagné par l’eau", { pct: nf(pct) }));
+    add("em", t("Exposition {level}", { level: t(RISK_LABEL[risk]).toLowerCase() }), RISK_COLOR[risk]);
+    card.style.display = "contents";
     popupRef.current = new maplibregl.Popup({ offset: 32, closeButton: false, className: "sar-popup" })
       .setLngLat([quartier.lon, quartier.lat])
-      .setHTML(
-        `<b>${quartier.name}</b><span>${nf(pct)} % du sol gagné par l’eau</span><em style="color:${RISK_COLOR[risk]}">Exposition ${RISK_LABEL[risk].toLowerCase()}</em>`
-      )
+      .setDOMContent(card)
       .addTo(map);
-  }, [focusId, ranking]);
+  }, [focusId, ranking, t]);
 
   const reset = () => {
     onFocus(null);
@@ -197,13 +149,13 @@ export default function QuartiersMap({ studyArea, acquisition, quartiers, rankin
         {["high", "mid", "low"].map((k) => (
           <span key={k} className="inline-flex items-center gap-1.5">
             <i className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: RISK_COLOR[k] }} />
-            {RISK_LABEL[k]}
+            {t(RISK_LABEL[k])}
           </span>
         ))}
       </div>
       {focusId && (
         <button className="sar-btn absolute right-2.5 top-2.5 h-[28px] px-2.5 text-[12px]" onClick={reset}>
-          Vue d’ensemble
+          {t("Vue d’ensemble")}
         </button>
       )}
     </div>

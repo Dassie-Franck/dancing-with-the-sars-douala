@@ -2,13 +2,14 @@
 // Si l'API ne répond pas dans le délai, on relit les fichiers statiques : la démo ne dépend jamais d'elle.
 //
 // À ajuster par l'équipe backend, et seulement ici :
-//   - ENDPOINTS : chemins des routes ;
-//   - toCatalog : forme de la réponse (par défaut, le même format que manifest.json, schéma 1.0) ;
-//   - layersBaseUrl : où sont servis les PNG (Vercel via public/data, ou StaticFiles de l'API, K8).
-import { manifestToCatalog } from "../contract/manifestMapper";
+//   - ENDPOINTS : chemins des routes (voir backend/app/main.py) ;
+//   - toCatalog : forme de la réponse (par défaut, le même format que manifest.json, schéma 1.0 ou 2.0) ;
+//   - layersBaseUrl : où sont servis les PNG (public/data du site, ou /data de l'API).
+import { compositesToDomain, manifestToCatalog } from "../contract/manifestMapper";
 
 export const ENDPOINTS = {
-  catalog: "/api/manifest", // renvoie le manifest complet (aoi + acquisitions), schéma 1.0
+  catalog: "/api/manifest", // manifest complet (aoi + acquisitions)
+  composites: "/api/composites", // composites saisonniers (facultatif)
 };
 
 /**
@@ -21,12 +22,16 @@ export function createApiSarRepository({ apiUrl, layersBaseUrl, timeoutMs = 3000
   const base = apiUrl.replace(/\/$/, "");
   const resolveUrl = (rel) => `${layersBaseUrl}${rel}`;
 
-  async function getJson(path) {
+  async function getJson(path, { optional = false } = {}) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
-      const res = await fetch(`${base}${path}`, { signal: ctrl.signal, headers: { Accept: "application/json" } });
-      if (!res.ok) throw new Error(`${path} : HTTP ${res.status}`);
+      // credentials: "omit" : aucune information de session n'est envoyée à l'API (lecture publique)
+      const res = await fetch(`${base}${path}`, { signal: ctrl.signal, credentials: "omit", headers: { Accept: "application/json" } });
+      if (!res.ok) {
+        if (optional && res.status === 404) return null;
+        throw new Error(`${path} : HTTP ${res.status}`);
+      }
       return await res.json();
     } finally {
       clearTimeout(timer);
@@ -36,7 +41,11 @@ export function createApiSarRepository({ apiUrl, layersBaseUrl, timeoutMs = 3000
   return {
     async getCatalog() {
       try {
-        return { ...toCatalog(await getJson(ENDPOINTS.catalog), resolveUrl), source: "api" };
+        const [manifest, composites] = await Promise.all([
+          getJson(ENDPOINTS.catalog),
+          getJson(ENDPOINTS.composites, { optional: true }).catch(() => null),
+        ]);
+        return { ...toCatalog(manifest, resolveUrl), composites: compositesToDomain(composites, resolveUrl), source: "api" };
       } catch (err) {
         if (!fallback) throw err;
         console.warn(`API indisponible (${err.message}) : repli sur les fichiers statiques.`);

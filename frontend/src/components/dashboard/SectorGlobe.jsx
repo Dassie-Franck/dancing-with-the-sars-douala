@@ -6,6 +6,7 @@ import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { centerOf, extentKm } from "../../domain/geo";
 import { SEASON_LABEL, fCoord as coord, fDate, nf } from "../../ui/format";
+import { useI18n } from "../../i18n";
 
 const SectorGlobeCanvas = lazy(() => import("./SectorGlobeCanvas.jsx"));
 
@@ -25,6 +26,7 @@ const prefersReducedMotion = () =>
 let introPlayed = false;
 
 export default function SectorGlobe({ studyArea, acquisition, active, onOpenMap }) {
+  const { t } = useI18n();
   const [webgl] = useState(hasWebGL);
   const [reduced] = useState(prefersReducedMotion);
   const [phase, setPhase] = useState(() => (webgl && !introPlayed ? "globe" : "sector"));
@@ -64,7 +66,7 @@ export default function SectorGlobe({ studyArea, acquisition, active, onOpenMap 
       {/* Statut pendant la plongée */}
       {!showSector && (
         <div className="pointer-events-none absolute inset-x-0 bottom-5 text-center font-mono text-[10.5px] uppercase tracking-[0.25em] text-sar-ink2">
-          Positionnement sur le secteur d’étude
+          {t("Positionnement sur le secteur d’étude")}
           <span className="mt-1.5 block text-sar-mut">
             {coord(center.lat, "N", "S")} · {coord(center.lon, "E", "O")}
           </span>
@@ -78,14 +80,14 @@ export default function SectorGlobe({ studyArea, acquisition, active, onOpenMap 
         }`}
       >
         <div className="flex min-w-0 flex-col sm:w-[40%]">
-          <span className="sar-lab">Secteur d’étude</span>
-          <h3 className="mt-1 text-[17px] font-semibold leading-tight">{studyArea.name}</h3>
+          <span className="sar-lab">{t("Secteur d’étude")}</span>
+          <h3 className="mt-1 text-[17px] font-semibold leading-tight">{t(studyArea.name)}</h3>
           <dl className="mt-3 space-y-1 text-[12.5px]">
-            <Kv k="Latitude" v={`${coord(bbox.south, "N", "S")} – ${coord(bbox.north, "N", "S")}`} />
-            <Kv k="Longitude" v={`${coord(bbox.west, "E", "O")} – ${coord(bbox.east, "E", "O")}`} />
-            <Kv k="Emprise" v={`${nf(kmW, 0)} × ${nf(kmH, 0)} km`} />
-            <Kv k="Grille" v={`${iw} × ${ih} px`} />
-            <Kv k="Projection" v={studyArea.crs} />
+            <Kv k={t("Latitude")} v={`${coord(bbox.south, "N", "S")} – ${coord(bbox.north, "N", "S")}`} />
+            <Kv k={t("Longitude")} v={`${coord(bbox.west, "E", "O")} – ${coord(bbox.east, "E", "O")}`} />
+            <Kv k={t("Emprise")} v={`${nf(kmW, 0)} × ${nf(kmH, 0)} km`} />
+            <Kv k={t("Grille")} v={`${iw} × ${ih} px`} />
+            <Kv k={t("Projection")} v={studyArea.crs} />
           </dl>
 
           {acquisition && (
@@ -96,17 +98,17 @@ export default function SectorGlobe({ studyArea, acquisition, active, onOpenMap 
               </div>
               <div className="mt-1.5 text-[26px] font-semibold leading-none tracking-tight">
                 {nf(acquisition.waterAreaKm2)}
-                <small className="ml-1 text-[13px] font-normal text-sar-mut">km² en eau</small>
+                <small className="ml-1 text-[13px] font-normal text-sar-mut">{t("km² en eau")}</small>
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {onOpenMap && (
                   <button className="sar-btn h-[30px] px-2.5 text-[12px]" onClick={onOpenMap}>
-                    Ouvrir la carte <ArrowRight size={14} />
+                    {t("Ouvrir la carte")} <ArrowRight size={14} />
                   </button>
                 )}
                 {webgl && (
-                  <button className="sar-btn h-[30px] px-2.5 text-[12px]" onClick={replay} title="Rejouer la plongée depuis le globe">
-                    <RotateCcw size={14} /> Revoir le globe
+                  <button className="sar-btn h-[30px] px-2.5 text-[12px]" onClick={replay} title={t("Rejouer la plongée depuis le globe")}>
+                    <RotateCcw size={14} /> {t("Revoir le globe")}
                   </button>
                 )}
               </div>
@@ -120,7 +122,7 @@ export default function SectorGlobe({ studyArea, acquisition, active, onOpenMap 
             preserveAspectRatio="xMidYMid meet"
             className={`h-full min-h-[220px] w-full transition-transform duration-[900ms] ease-out ${showSector ? "scale-100" : "scale-[0.35]"}`}
             role="img"
-            aria-label={acquisition ? `Image radar du secteur, ${fDate(acquisition.date)}` : "Image radar du secteur"}
+            aria-label={acquisition ? t("Image radar du secteur, {date}", { date: fDate(acquisition.date) }) : t("Image radar du secteur")}
           >
             <rect width={iw} height={ih} fill="#000" />
             {acquisition && <SectorLayers key={acquisition.id} acquisition={acquisition} w={iw} h={ih} />}
@@ -128,9 +130,9 @@ export default function SectorGlobe({ studyArea, acquisition, active, onOpenMap 
             <FrameTicks w={iw} h={ih} />
           </svg>
           <figcaption className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-3 whitespace-nowrap rounded-md border border-sar-line bg-black/75 px-2 py-1 text-[11px] text-sar-ink2 backdrop-blur">
-            <Swatch c="#22d3ee" l="Eau détectée" />
-            <Swatch c="#fb923c" l="Eau nouvelle" />
-            <span className="text-sar-mut">fond : HH</span>
+            <Swatch c="#22d3ee" l={t("Eau détectée")} />
+            <Swatch c="#fb923c" l={t("Eau nouvelle")} />
+            <span className="text-sar-mut">{t("fond : radar {pol}", { pol: acquisition?.polarization ?? "" })}</span>
           </figcaption>
         </figure>
       </div>
@@ -138,10 +140,10 @@ export default function SectorGlobe({ studyArea, acquisition, active, onOpenMap 
   );
 }
 
-// Fond HH + masque d'eau + eau nouvelle, superposés sur la même grille (contrat : mêmes dimensions)
+// Fond radar + masque d'eau + eau nouvelle, superposés sur la même grille (contrat : mêmes dimensions)
 function SectorLayers({ acquisition, w, h }) {
   const L = acquisition.layers;
-  const keys = ["backscatterHh", "waterMask", "newWaterMask"].filter((k) => L[k]);
+  const keys = ["backscatter", "waterMask", "newWaterMask"].filter((k) => L[k]);
   return (
     <g className="animate-[sar-fade_400ms_ease-out]">
       {keys.map((k) => (
@@ -180,6 +182,7 @@ const Swatch = ({ c, l }) => (
 );
 
 export function SeasonChip({ season }) {
+  const { t } = useI18n();
   const cls = season === "dry" ? "bg-sar-dry/15 text-sar-dry" : "bg-sar-water/15 text-sar-water";
-  return <span className={`sar-chip ${cls}`}>{SEASON_LABEL[season] ?? season}</span>;
+  return <span className={`sar-chip ${cls}`}>{SEASON_LABEL[season] ? t(SEASON_LABEL[season]) : season}</span>;
 }
